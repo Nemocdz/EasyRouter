@@ -13,7 +13,7 @@ final class LightRouterTests: XCTestCase {
     
     func testExample() {
         matchCase.forEach { (url, expect) in
-            var parameters = [String: String]()
+            var parameters = URLRouterParameters()
             let outputs = trie.match(url: url, parameters: &parameters)
             let result = MatchResult(paramters: parameters, outputs: outputs)
             XCTAssert(result == expect, "case url: \(url)")

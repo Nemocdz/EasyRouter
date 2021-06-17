@@ -1,13 +1,13 @@
 import Foundation
 
 public class LightRouter {
-    public enum RouterError: Error {
+    public enum Error: Swift.Error {
         case mismatch
         case unfinish
     }
 
     private let trie = TrieRouter<LightRouterHandler>()
-    private let lock = NSRecursiveLock()
+    private let lock = NSLock()
     
     public init() {
     }
@@ -18,9 +18,9 @@ public class LightRouter {
         trie.register(urlPattern: urlPattern, output: handler)
     }
     
-    public func route(to url: URL, completion: (Result<(), RouterError>) -> ()) {
+    public func route(to url: URL, completion: (Result<(), Error>) -> ()) {
         lock.lock()
-        var parameters = [String: String]()
+        var parameters = URLRouterParameters()
         let handlers = trie.match(url: url, parameters: &parameters)
         lock.unlock()
         
@@ -48,7 +48,6 @@ public class LightRouter {
                 }
             }
         }
-        
         handleNext()
     }
 }

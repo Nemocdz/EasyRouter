@@ -32,13 +32,12 @@ extension TrieRouter: URLRouter {
         currentNode.output = output
     }
     
-    func match(url: URL, parameters: inout [String : String]) -> [Output] {
+    func match(url: URL, parameters: inout URLRouterParameters) -> [Output] {
         var currentNode = root
         var outputs = [Output]()
-        print(url.urlComponents)
         var isEnd = true
         for component in url.urlComponents {
-            /// 尾通配符匹配
+            // 尾通配符匹配
             if let node = currentNode.catchall {
                 if let output = node.output {
                     outputs.append(output)
@@ -46,17 +45,16 @@ extension TrieRouter: URLRouter {
             }
             
             if let node = currentNode.constants[component.lowercased()] {
-                /// 直接匹配
+                // 直接匹配
                 currentNode = node
             } else if let (name, node) = currentNode.parameter {
-                /// 参数匹配
+                // 参数匹配
                 if let component = component.removingPercentEncoding {
-                    parameters[name] = component
+                    parameters.addValue(component, forKey: name)
                 }
-                
                 currentNode = node
             } else if let node = currentNode.anything {
-                /// 通配符匹配
+                // 通配符匹配
                 currentNode = node
             } else {
                 isEnd = false
@@ -68,9 +66,10 @@ extension TrieRouter: URLRouter {
             outputs.append(output)
         }
         
-        parameters.merge(url.queryParameters) {
-            assert($0 == $1, "duplicate query name")
-            return $1
+        url.queryItems.forEach {
+            if let value = $0.value {
+                parameters.addValue(value, forKey: $0.name)
+            }
         }
         
         return outputs
@@ -107,27 +106,28 @@ fileprivate extension URL {
         if let host = host {
             allComponents.append(host)
         }
-        
         let _pathComponents = pathComponents.drop { $0 == "/" }
-        
         allComponents.append(contentsOf: _pathComponents)
         return allComponents
     }
     
-    var queryParameters: [String: String] {
+    
+    var queryItems: [URLQueryItem] {
         guard let items = URLComponents(url: self, resolvingAgainstBaseURL: true)?.queryItems else {
-            return [:]
+            return []
         }
-        
-        var result = [String: String]()
-        
-        items.forEach {
-            guard let value = $0.value else { return }
-            assert(result.keys.contains($0.name), "duplicate query name")
-            result[$0.name] = value
+        return items
+    }
+}
+
+fileprivate extension URLRouterParameters {
+    mutating func addValue(_ value: Value.Element, forKey key: Key) {
+        if var array = self[key] {
+            array.append(value)
+            self[key] = array
+        } else {
+            self[key] = Value([value])
         }
-        
-        return result
     }
 }
 

@@ -7,8 +7,10 @@
 
 import Foundation
 
+public typealias URLRouterParameters = [String: [String]]
+
 protocol URLRouter {
     associatedtype Output
     func register(urlPattern: String, output: Output)
-    func match(url: URL, parameters: inout [String: String]) -> [Output]
+    func match(url: URL, parameters: inout URLRouterParameters) -> [Output]
 }
