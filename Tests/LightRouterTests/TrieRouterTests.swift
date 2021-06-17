@@ -1,5 +1,12 @@
-import XCTest
+//
+//  File.swift
+//
+//
+//  Created by Nemo on 2021/6/8.
+//
+
 @testable import LightRouter
+import XCTest
 
 final class TrieRouterTests: XCTestCase {
     enum Pattern: String, CaseIterable {
@@ -11,7 +18,7 @@ final class TrieRouterTests: XCTestCase {
         case f = "a://b/:c/**"
         
         var output: String {
-            self.rawValue
+            rawValue
         }
     }
     
@@ -68,7 +75,7 @@ final class TrieRouterTests: XCTestCase {
     
     func testCase4() {
         let url: URL = "a://b/d"
-        let result = MatchResult(paramters: ["c":["d"]], patterns: [.a, .c])
+        let result = MatchResult(paramters: ["c": ["d"]], patterns: [.a, .c])
         
         var parameters = RouterParameters()
         let outputs = trie.match(url: url, parameters: &parameters)
@@ -90,7 +97,7 @@ final class TrieRouterTests: XCTestCase {
     
     func testCase6() {
         let url: URL = "a://b/e/d"
-        let result = MatchResult(paramters: ["c":["e"]], patterns: [.a, .c, .f, .e])
+        let result = MatchResult(paramters: ["c": ["e"]], patterns: [.a, .c, .f, .e])
         
         var parameters = RouterParameters()
         let outputs = trie.match(url: url, parameters: &parameters)
@@ -101,7 +108,7 @@ final class TrieRouterTests: XCTestCase {
     
     func testCase7() {
         let url: URL = "a://b/e/c"
-        let result = MatchResult(paramters: ["c":["e"]], patterns: [.a, .c, .f])
+        let result = MatchResult(paramters: ["c": ["e"]], patterns: [.a, .c, .f])
         
         var parameters = RouterParameters()
         let outputs = trie.match(url: url, parameters: &parameters)
@@ -120,6 +127,28 @@ final class TrieRouterTests: XCTestCase {
         XCTAssert(parameters == result.paramters)
         XCTAssert(outputs == result.outputs)
     }
+    
+    func testCase9() {
+        let url: URL = "a://b?key=value"
+        let result = MatchResult(paramters: ["key": ["value"]], patterns: [.a])
+        
+        var parameters = RouterParameters()
+        let outputs = trie.match(url: url, parameters: &parameters)
+        
+        XCTAssert(parameters == result.paramters)
+        XCTAssert(outputs == result.outputs)
+    }
+    
+    func testCase10() {
+        let url: URL = "a://b/c1/d?c=c1&c=c2"
+        let result = MatchResult(paramters: ["c": ["c1", "c1", "c2"]], patterns: [.a, .c, .f, .e])
+        
+        var parameters = RouterParameters()
+        let outputs = trie.match(url: url, parameters: &parameters)
+        
+        XCTAssert(parameters == result.paramters)
+        XCTAssert(outputs == result.outputs)
+    }
 
     static var allTests = [
         ("testCase1", testCase1),
@@ -130,6 +159,8 @@ final class TrieRouterTests: XCTestCase {
         ("testCase6", testCase6),
         ("testCase7", testCase7),
         ("testCase8", testCase8),
+        ("testCase9", testCase9),
+        ("testCase10", testCase10),
     ]
 }
 
