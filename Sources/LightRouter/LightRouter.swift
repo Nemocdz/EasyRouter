@@ -1,11 +1,6 @@
 import Foundation
 
 public class LightRouter {
-    public enum Error: Swift.Error {
-        case mismatch
-        case unfinish
-    }
-
     private let trie = TrieRouter<LightRouterHandler>()
     private let lock = NSLock()
     
@@ -18,30 +13,37 @@ public class LightRouter {
         trie.register(urlPattern: urlPattern, output: handler)
     }
     
-    public func route(to url: URL, completion: (Result<(), Error>) -> ()) {
+    public func route(to url: URL, completion: (Result<LightRouterHandlerContext, Error>) -> ()) {
+        let routeResult = routeResult(of: url)
+        handleRouteResult(routeResult, completion: completion)
+    }
+    
+    public func routeResult(of url: URL) -> RouteResult {
         lock.lock()
-        var parameters = URLRouterParameters()
+        defer { lock.unlock() }
+        var parameters = RouterParameters()
         let handlers = trie.match(url: url, parameters: &parameters)
-        lock.unlock()
-        
-        let request = Request(url: url, parameters: parameters)
-        
-        guard !handlers.isEmpty else {
+        let context = LightRouterHandlerContext(url: url, parameters: parameters)
+        return RouteResult(context: context, handlers: handlers)
+    }
+    
+    public func handleRouteResult(_ result: RouteResult, completion: (Result<LightRouterHandlerContext, Error>) -> ()) {
+        guard result.canHandle else {
             return completion(.failure(.mismatch))
         }
-        
+        let context = result.context
+        let handlers = result.handlers
         var handlerIndex = 0
-        
         func handleNext() {
             guard handlerIndex < handlers.count else {
-                return completion(.failure(.unfinish))
+                return completion(.success(context))
             }
-            
             let handler = handlers[handlerIndex]
-            handler.handle(request: request) { result in
+            handler.handle(context: context) { result in
+                context.executedHandlers.append(handler)
                 switch result {
                 case .finish:
-                    completion(.success(()))
+                    completion(.success(context))
                 case .next:
                     handlerIndex += 1
                     handleNext()
@@ -49,5 +51,22 @@ public class LightRouter {
             }
         }
         handleNext()
+    }
+}
+
+public extension LightRouter {
+    struct RouteResult {
+        public let context: LightRouterHandlerContext
+        let handlers: [LightRouterHandler]
+
+        public var canHandle: Bool {
+            !handlers.isEmpty
+        }
+    }
+}
+
+public extension LightRouter {
+    enum Error: Swift.Error {
+        case mismatch
     }
 }
