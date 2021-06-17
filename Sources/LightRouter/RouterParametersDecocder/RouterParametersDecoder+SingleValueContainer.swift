@@ -21,14 +21,18 @@ extension RouterParametersDecoder {
             return decoder.storage.count == 0
         }
         
+        func typeError<T>(of type: T.Type) -> Error {
+            let description = "Expected to decode \(type) but can't use \(String.self) to init."
+            let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
+            return DecodingError.typeMismatch(type, context)
+        }
+        
         func decode(_ type: Bool.Type) throws -> Bool {
             let value = try currentValue()
             if let value = Bool(value) {
                 return value
             } else {
-                let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-                let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-                throw DecodingError.typeMismatch(type, context)
+                throw typeError(of: type)
             }
         }
         
@@ -41,9 +45,7 @@ extension RouterParametersDecoder {
             if let value = Double(value) {
                 return value
             } else {
-                let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-                let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-                throw DecodingError.typeMismatch(type, context)
+                throw typeError(of: type)
             }
         }
         
@@ -52,9 +54,7 @@ extension RouterParametersDecoder {
             if let value = Float(value) {
                 return value
             } else {
-                let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-                let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-                throw DecodingError.typeMismatch(type, context)
+                throw typeError(of: type)
             }
         }
         
@@ -63,9 +63,7 @@ extension RouterParametersDecoder {
             if let value = Int(value) {
                 return value
             } else {
-                let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-                let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-                throw DecodingError.typeMismatch(type, context)
+                throw typeError(of: type)
             }
         }
         
@@ -74,9 +72,7 @@ extension RouterParametersDecoder {
             if let value = Int8(value) {
                 return value
             } else {
-                let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-                let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-                throw DecodingError.typeMismatch(type, context)
+                throw typeError(of: type)
             }
         }
         
@@ -85,9 +81,7 @@ extension RouterParametersDecoder {
             if let value = Int16(value) {
                 return value
             } else {
-                let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-                let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-                throw DecodingError.typeMismatch(type, context)
+                throw typeError(of: type)
             }
         }
         
@@ -96,9 +90,7 @@ extension RouterParametersDecoder {
             if let value = Int32(value) {
                 return value
             } else {
-                let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-                let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-                throw DecodingError.typeMismatch(type, context)
+                throw typeError(of: type)
             }
         }
         
@@ -107,9 +99,7 @@ extension RouterParametersDecoder {
             if let value = Int64(value) {
                 return value
             } else {
-                let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-                let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-                throw DecodingError.typeMismatch(type, context)
+                throw typeError(of: type)
             }
         }
         
@@ -118,9 +108,7 @@ extension RouterParametersDecoder {
             if let value = UInt(value) {
                 return value
             } else {
-                let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-                let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-                throw DecodingError.typeMismatch(type, context)
+                throw typeError(of: type)
             }
         }
         
@@ -129,9 +117,7 @@ extension RouterParametersDecoder {
             if let value = UInt8(value) {
                 return value
             } else {
-                let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-                let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-                throw DecodingError.typeMismatch(type, context)
+                throw typeError(of: type)
             }
         }
         
@@ -140,9 +126,7 @@ extension RouterParametersDecoder {
             if let value = UInt16(value) {
                 return value
             } else {
-                let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-                let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-                throw DecodingError.typeMismatch(type, context)
+                throw typeError(of: type)
             }
         }
         
@@ -151,9 +135,7 @@ extension RouterParametersDecoder {
             if let value = UInt32(value) {
                 return value
             } else {
-                let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-                let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-                throw DecodingError.typeMismatch(type, context)
+                throw typeError(of: type)
             }
         }
         
@@ -162,9 +144,7 @@ extension RouterParametersDecoder {
             if let value = UInt64(value) {
                 return value
             } else {
-                let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-                let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-                throw DecodingError.typeMismatch(type, context)
+                throw typeError(of: type)
             }
         }
         
