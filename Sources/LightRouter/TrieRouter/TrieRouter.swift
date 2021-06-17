@@ -32,7 +32,7 @@ extension TrieRouter: URLRouter {
         currentNode.output = output
     }
     
-    func match(url: URL, parameters: inout URLRouterParameters) -> [Output] {
+    func match(url: URL, parameters: inout RouterParameters) -> [Output] {
         var currentNode = root
         var outputs = [Output]()
         var isEnd = true
@@ -111,7 +111,6 @@ fileprivate extension URL {
         return allComponents
     }
     
-    
     var queryItems: [URLQueryItem] {
         guard let items = URLComponents(url: self, resolvingAgainstBaseURL: true)?.queryItems else {
             return []
@@ -120,7 +119,7 @@ fileprivate extension URL {
     }
 }
 
-fileprivate extension URLRouterParameters {
+fileprivate extension RouterParameters {
     mutating func addValue(_ value: Value.Element, forKey key: Key) {
         if var array = self[key] {
             array.append(value)
