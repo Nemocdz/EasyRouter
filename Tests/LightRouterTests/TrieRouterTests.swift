@@ -16,7 +16,7 @@ final class TrieRouterTests: XCTestCase {
     }
     
     struct MatchResult {
-        let paramters: URLRouterParameters
+        let paramters: RouterParameters
         let patterns: [Pattern]
         
         var outputs: [String] {
@@ -37,7 +37,7 @@ final class TrieRouterTests: XCTestCase {
         let url: URL = "b://c"
         let result = MatchResult(paramters: [:], patterns: [])
         
-        var parameters = URLRouterParameters()
+        var parameters = RouterParameters()
         let outputs = trie.match(url: url, parameters: &parameters)
         
         XCTAssert(parameters == result.paramters)
@@ -48,7 +48,7 @@ final class TrieRouterTests: XCTestCase {
         let url: URL = "a://b"
         let result = MatchResult(paramters: [:], patterns: [.a])
         
-        var parameters = URLRouterParameters()
+        var parameters = RouterParameters()
         let outputs = trie.match(url: url, parameters: &parameters)
         
         XCTAssert(parameters == result.paramters)
@@ -59,7 +59,7 @@ final class TrieRouterTests: XCTestCase {
         let url: URL = "a://b/c"
         let result = MatchResult(paramters: [:], patterns: [.a, .c, .b])
         
-        var parameters = URLRouterParameters()
+        var parameters = RouterParameters()
         let outputs = trie.match(url: url, parameters: &parameters)
         
         XCTAssert(parameters == result.paramters)
@@ -70,7 +70,7 @@ final class TrieRouterTests: XCTestCase {
         let url: URL = "a://b/d"
         let result = MatchResult(paramters: ["c":["d"]], patterns: [.a, .c])
         
-        var parameters = URLRouterParameters()
+        var parameters = RouterParameters()
         let outputs = trie.match(url: url, parameters: &parameters)
         
         XCTAssert(parameters == result.paramters)
@@ -81,7 +81,7 @@ final class TrieRouterTests: XCTestCase {
         let url: URL = "a://c/c"
         let result = MatchResult(paramters: [:], patterns: [.a, .d])
         
-        var parameters = URLRouterParameters()
+        var parameters = RouterParameters()
         let outputs = trie.match(url: url, parameters: &parameters)
         
         XCTAssert(parameters == result.paramters)
@@ -92,7 +92,7 @@ final class TrieRouterTests: XCTestCase {
         let url: URL = "a://b/e/d"
         let result = MatchResult(paramters: ["c":["e"]], patterns: [.a, .c, .f, .e])
         
-        var parameters = URLRouterParameters()
+        var parameters = RouterParameters()
         let outputs = trie.match(url: url, parameters: &parameters)
         
         XCTAssert(parameters == result.paramters)
@@ -103,7 +103,7 @@ final class TrieRouterTests: XCTestCase {
         let url: URL = "a://b/e/c"
         let result = MatchResult(paramters: ["c":["e"]], patterns: [.a, .c, .f])
         
-        var parameters = URLRouterParameters()
+        var parameters = RouterParameters()
         let outputs = trie.match(url: url, parameters: &parameters)
         
         XCTAssert(parameters == result.paramters)
@@ -114,7 +114,7 @@ final class TrieRouterTests: XCTestCase {
         let url: URL = "a://b/c/d"
         let result = MatchResult(paramters: [:], patterns: [.a, .c])
         
-        var parameters = URLRouterParameters()
+        var parameters = RouterParameters()
         let outputs = trie.match(url: url, parameters: &parameters)
         
         XCTAssert(parameters == result.paramters)

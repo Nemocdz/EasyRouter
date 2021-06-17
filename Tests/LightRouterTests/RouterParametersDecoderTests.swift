@@ -8,13 +8,13 @@
 import XCTest
 @testable import LightRouter
 
-final class URLRouterParametersDecoderTests: XCTestCase {
+final class RouterParametersDecoderTests: XCTestCase {
     override func setUp() {
     }
     
     func testDecodeInt() throws {
-        let parameters: URLRouterParameters = ["int": ["1", "-2"]]
-        let decoder = URLRouterParametersDecoder()
+        let parameters: RouterParameters = ["int": ["1", "-2"]]
+        let decoder = RouterParametersDecoder()
         
         func testInt() throws {
             struct Object: Decodable {
@@ -60,8 +60,8 @@ final class URLRouterParametersDecoderTests: XCTestCase {
     
     
     func testDecodeString() throws {
-        let parameters: URLRouterParameters = ["string": ["a", "b"]]
-        let decoder = URLRouterParametersDecoder()
+        let parameters: RouterParameters = ["string": ["a", "b"]]
+        let decoder = RouterParametersDecoder()
         
         func testString() throws {
             struct Object: Decodable {
@@ -86,8 +86,8 @@ final class URLRouterParametersDecoderTests: XCTestCase {
     }
 
     func testDecodeBool() throws {
-        let parameters: URLRouterParameters = ["bool": ["true", "false"]]
-        let decoder = URLRouterParametersDecoder()
+        let parameters: RouterParameters = ["bool": ["true", "false"]]
+        let decoder = RouterParametersDecoder()
         
         func testBool() throws {
             struct Object: Decodable {
@@ -112,8 +112,8 @@ final class URLRouterParametersDecoderTests: XCTestCase {
     }
     
     func testDecodeFloat() throws {
-        let parameters: URLRouterParameters = ["float": ["1.1", "-2.1"]]
-        let decoder = URLRouterParametersDecoder()
+        let parameters: RouterParameters = ["float": ["1.1", "-2.1"]]
+        let decoder = RouterParametersDecoder()
         
         func testDouble() throws {
             struct Object: Decodable {
@@ -158,8 +158,8 @@ final class URLRouterParametersDecoderTests: XCTestCase {
     }
     
     func testEmpty() throws {
-        let parameters: URLRouterParameters = ["empty": []]
-        let decoder = URLRouterParametersDecoder()
+        let parameters: RouterParameters = ["empty": []]
+        let decoder = RouterParametersDecoder()
         
         func testInt() throws {
             struct Object: Decodable {
@@ -272,8 +272,8 @@ final class URLRouterParametersDecoderTests: XCTestCase {
     }
     
     func testOptional() throws {
-        let parameters: URLRouterParameters = [:]
-        let decoder = URLRouterParametersDecoder()
+        let parameters: RouterParameters = [:]
+        let decoder = RouterParametersDecoder()
         
         func testInt() throws {
             struct Object: Decodable {
@@ -386,8 +386,8 @@ final class URLRouterParametersDecoderTests: XCTestCase {
     }
     
     func testSnake() throws {
-        let parameters: URLRouterParameters = ["snake_value": ["1"], "_snake_value": ["1"], "_snake_value_": ["1"]]
-        let decoder = URLRouterParametersDecoder()
+        let parameters: RouterParameters = ["snake_value": ["1"], "_snake_value": ["1"], "_snake_value_": ["1"]]
+        let decoder = RouterParametersDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
         func _testSnake() throws {
