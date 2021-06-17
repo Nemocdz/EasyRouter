@@ -8,20 +8,20 @@
 import Foundation
 
 public protocol LightRouterHandler {
-    func handle(context: LightRouterHandlerContext, completion: (LightRouterHandlerResult) -> ())
+    func handle(context: LightRouterHandlerContext, completion: (LightRouterHandlerResult) -> Void)
 }
 
 public protocol LightRouterModelHandler: LightRouterHandler {
-    associatedtype ParametersModel: Decodable
+    associatedtype Parameters: Decodable
     var parametersDecoder: RouterParametersDecoder { get }
-    func handle(context: LightRouterHandlerContext, result: Result<ParametersModel, Error>, completion: (LightRouterHandlerResult) -> ())
+    func handle(context: LightRouterHandlerContext, result: Result<Parameters, Error>, completion: (LightRouterHandlerResult) -> Void)
 }
 
 public extension LightRouterModelHandler {
     func handle(context: LightRouterHandlerContext, completion: (LightRouterHandlerResult) -> ()) {
-        let result: Result<ParametersModel, Error>
+        let result: Result<Parameters, Error>
         do {
-            let model = try parametersDecoder.decode(ParametersModel.self, from: context.parameters)
+            let model = try parametersDecoder.decode(Parameters.self, from: context.parameters)
             result = .success(model)
         } catch {
             result = .failure(error)
@@ -29,9 +29,5 @@ public extension LightRouterModelHandler {
         handle(context: context, result: result, completion: completion)
     }
     
-    var parametersDecoder: RouterParametersDecoder {
-        return .init()
-    }
+    var parametersDecoder: RouterParametersDecoder { .init() }
 }
-
-

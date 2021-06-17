@@ -84,10 +84,6 @@ extension TrieRouter: CustomStringConvertible {
 
 fileprivate extension String {
     var urlComponents: [String] {
-        if let url = URL(string: self) {
-            return url.urlComponents
-        }
-        
         if let string = addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
            let url = URL(string: string) {
             return url.urlComponents

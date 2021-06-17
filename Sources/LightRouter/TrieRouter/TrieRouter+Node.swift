@@ -73,6 +73,6 @@ extension TrieRouter.Node: CustomStringConvertible {
 
 fileprivate extension Array where Element == String {
     func indented() -> [String] {
-        return self.map { "  " + $0 }
+        return map { "  " + $0 }
     }
 }

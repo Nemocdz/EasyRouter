@@ -4,7 +4,8 @@ import XCTest
 public func allTests() -> [XCTestCaseEntry] {
     return [
         testCase(TrieRouterTests.allTests),
-        testCast(RouterParametersDecoderTests.allTests),
+        testCase(RouterParametersDecoderTests.allTests),
+        testCase(LightRouterHandlerTests.allTests),
     ]
 }
 #endif
