@@ -18,7 +18,7 @@ public class LightRouter {
     public func register(urlPattern: String, handler: LightRouterHandler) {
         lock.lock()
         defer { lock.unlock() }
-        trie.register(urlPattern: urlPattern, output: handler)
+        trie.register(urlComponents: urlPattern.urlComponents, output: handler)
     }
 
     public func route(to url: URL, completion: RouteCompletion? = nil) {
@@ -27,10 +27,15 @@ public class LightRouter {
     }
 
     public func routeResult(of url: URL) -> RouteResult {
-        lock.lock()
-        defer { lock.unlock() }
         var parameters = RouterParameters()
-        let handlers = trie.match(url: url, parameters: &parameters)
+        lock.lock()
+        let handlers = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
+        lock.unlock()
+        url.queryItems.forEach {
+            if let value = $0.value {
+                parameters.addValue(value, forKey: $0.name)
+            }
+        }
         let context = LightRouterHandlerContext(url: url, parameters: parameters)
         return RouteResult(context: context, handlers: handlers)
     }

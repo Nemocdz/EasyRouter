@@ -12,11 +12,9 @@ final class TrieRouter<O> {
 }
 
 extension TrieRouter: URLRouter {
-    typealias Output = O
-
-    func register(urlPattern: String, output: Output) {
+    func register(urlComponents: [String], output: O) {
         var currentNode = root
-        let components = urlPattern.urlComponents.map { RouterComponent(stringLiteral: $0.lowercased()) }
+        let components = urlComponents.map { RouterComponent(stringLiteral: $0.lowercased()) }
         
         for component in components {
             currentNode = currentNode.addOrFindNextNode(of: component)
@@ -32,11 +30,11 @@ extension TrieRouter: URLRouter {
         currentNode.output = output
     }
     
-    func match(url: URL, parameters: inout RouterParameters) -> [Output] {
+    func match(urlComponents: [String], parameters: inout RouterParameters) -> [O] {
         var currentNode = root
         var outputs = [Output]()
         var isEnd = true
-        for component in url.urlComponents {
+        for component in urlComponents {
             // 尾通配符匹配
             if let node = currentNode.catchall {
                 if let output = node.output {
@@ -66,12 +64,6 @@ extension TrieRouter: URLRouter {
             outputs.append(output)
         }
         
-        url.queryItems.forEach {
-            if let value = $0.value {
-                parameters.addValue(value, forKey: $0.name)
-            }
-        }
-        
         return outputs
     }
 }
@@ -81,51 +73,5 @@ extension TrieRouter: CustomStringConvertible {
         return root.description
     }
 }
-
-fileprivate extension String {
-    var urlComponents: [String] {
-        if let string = addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-           let url = URL(string: string) {
-            return url.urlComponents
-        }
-        
-        return []
-    }
-}
-
-fileprivate extension URL {
-    var urlComponents: [String] {
-        var allComponents = [String]()
-        if let scheme = scheme {
-            allComponents.append(scheme)
-        }
-        if let host = host {
-            allComponents.append(host)
-        }
-        let _pathComponents = pathComponents.drop { $0 == "/" }
-        allComponents.append(contentsOf: _pathComponents)
-        return allComponents
-    }
-    
-    var queryItems: [URLQueryItem] {
-        guard let items = URLComponents(url: self, resolvingAgainstBaseURL: true)?.queryItems else {
-            return []
-        }
-        return items
-    }
-}
-
-fileprivate extension RouterParameters {
-    mutating func addValue(_ value: Value.Element, forKey key: Key) {
-        if var array = self[key] {
-            array.append(value)
-            self[key] = array
-        } else {
-            self[key] = Value([value])
-        }
-    }
-}
-
-
 
 

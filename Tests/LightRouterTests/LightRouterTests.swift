@@ -8,7 +8,7 @@
 @testable import LightRouter
 import XCTest
 
-final class LightRouterHandlerTests: XCTestCase {
+final class LightRouterTests: XCTestCase {
     struct NextHandler: LightRouterHandler {
         let exp: XCTestExpectation
         func handle(context: LightRouterHandlerContext, completion: LightRouterHandlerCompletion) {
@@ -189,6 +189,35 @@ final class LightRouterHandlerTests: XCTestCase {
         wait(for: [next, completion], timeout: 1, enforceOrder: true)
     }
     
+    func testQueryItems() {
+        struct NextHandler: LightRouterHandler {
+            func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
+                completion(.next)
+            }
+        }
+
+
+        let router = LightRouter()
+        router.register(urlPattern: "a://**", handler: NextHandler())
+        let result = router.routeResult(of: "a://b?key=value")
+
+        XCTAssert(result.context.parameters == ["key": ["value"]])
+    }
+    
+    func testMuilQueryItems() {
+        struct NextHandler: LightRouterHandler {
+            func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
+                completion(.next)
+            }
+        }
+
+        let router = LightRouter()
+        router.register(urlPattern: "a://b/:c/**", handler: NextHandler())
+        let result = router.routeResult(of: "a://b/c1/d?c=c1&c=c2")
+
+        XCTAssert(result.context.parameters == ["c": ["c1", "c1", "c2"]])
+    }
+    
     static var allTests = [
         ("testNextHandle", testNextHandle),
         ("testFinishHandle", testFinishHandle),
@@ -196,6 +225,8 @@ final class LightRouterHandlerTests: XCTestCase {
         ("testContext", testContext),
         ("testModelHandler", testModelHandler),
         ("testAsync", testAsync),
+        ("testQueryItems", testQueryItems),
+        ("testMuilQueryItems", testMuilQueryItems),
     ]
 }
     
