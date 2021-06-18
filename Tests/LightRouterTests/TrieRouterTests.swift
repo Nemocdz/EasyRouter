@@ -125,28 +125,6 @@ final class TrieRouterTests: XCTestCase {
         XCTAssert(parameters == result.paramters)
         XCTAssert(outputs == result.outputs)
     }
-    
-//    func testCase9() {
-//        let url: URL = "a://b?key=value"
-//        let result = MatchResult(paramters: ["key": ["value"]], patterns: [.a])
-//
-//        var parameters = RouterParameters()
-//        let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
-//
-//        XCTAssert(parameters == result.paramters)
-//        XCTAssert(outputs == result.outputs)
-//    }
-//
-//    func testCase10() {
-//        let url: URL = "a://b/c1/d?c=c1&c=c2"
-//        let result = MatchResult(paramters: ["c": ["c1", "c1", "c2"]], patterns: [.a, .c, .f, .e])
-//
-//        var parameters = RouterParameters()
-//        let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
-//
-//        XCTAssert(parameters == result.paramters)
-//        XCTAssert(outputs == result.outputs)
-//    }
 
     static var allTests = [
         ("testCase1", testCase1),
@@ -157,8 +135,6 @@ final class TrieRouterTests: XCTestCase {
         ("testCase6", testCase6),
         ("testCase7", testCase7),
         ("testCase8", testCase8),
-        //("testCase9", testCase9),
-        //("testCase10", testCase10),
     ]
 }
 

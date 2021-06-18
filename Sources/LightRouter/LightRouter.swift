@@ -15,6 +15,12 @@ public class LightRouter {
 
     public init() {}
 
+    
+    /// 注册匹配模式字符串和对应的执行结果
+    /// - Parameters:
+    ///   - urlPattern: 匹配模式字符串
+    ///   - handler: 中间件
+    /// - Returns: 是否注册成功，如果非法字符串则失败
     @discardableResult
     public func register(urlPattern: String, handler: LightRouterHandler) -> Bool {
         let urlComponents = urlPattern.urlComponents
@@ -24,12 +30,19 @@ public class LightRouter {
         lock.unlock()
         return true
     }
-
+    
+    /// 获取 url 匹配结果，并执行匹配结果
+    /// - Parameters:
+    ///   - url: url
+    ///   - completion: 执行结束
     public func route(to url: URL, completion: RouteCompletion? = nil) {
         let routeResult = routeResult(of: url)
         handleRouteResult(routeResult, completion: completion)
     }
 
+    /// 获取 url 匹配结果
+    /// - Parameter url: url
+    /// - Returns: 匹配结果
     public func routeResult(of url: URL) -> RouteResult {
         var parameters = RouterParameters()
         lock.lock()
@@ -44,13 +57,18 @@ public class LightRouter {
         return RouteResult(context: context, handlers: handlers)
     }
 
-    public func handleRouteResult(_ result: RouteResult, completion: RouteCompletion? = nil) {
+    /// 执行匹配结果
+    /// - Parameters:
+    ///   - result: 匹配结果
+    ///   - reversed: 执行顺序是否倒序（默认是路径短的结果先执行，通用的匹配结果比精确的结果先执行）
+    ///   - completion: 执行结束
+    public func handleRouteResult(_ result: RouteResult, reversed: Bool = false, completion: RouteCompletion? = nil) {
         guard result.canHandle else {
             completion?(.failure(.mismatch))
             return
         }
         let context = result.context
-        let handlers = result.handlers
+        let handlers = reversed ? result.handlers.reversed() : result.handlers
         var handlerIndex = 0
         func handleNext() {
             guard handlerIndex < handlers.count else {
@@ -75,9 +93,13 @@ public class LightRouter {
 
 public extension LightRouter {
     struct RouteResult {
+        /// 处理过程上下文
         public let context: LightRouterHandlerContext
-        let handlers: [LightRouterHandler]
+        
+        /// 所有匹配到的中间件
+        public let handlers: [LightRouterHandler]
 
+        /// 是否可有匹配结果可以处理
         public var canHandle: Bool {
             !handlers.isEmpty
         }

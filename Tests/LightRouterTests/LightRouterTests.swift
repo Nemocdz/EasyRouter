@@ -11,7 +11,7 @@ import XCTest
 final class LightRouterTests: XCTestCase {
     struct NextHandler: LightRouterHandler {
         let exp: XCTestExpectation
-        func handle(context: LightRouterHandlerContext, completion: LightRouterHandlerCompletion) {
+        func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
             exp.fulfill()
             completion(.next)
         }
@@ -19,7 +19,7 @@ final class LightRouterTests: XCTestCase {
     
     struct FinishHandler: LightRouterHandler {
         let exp: XCTestExpectation
-        func handle(context: LightRouterHandlerContext, completion: LightRouterHandlerCompletion) {
+        func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
             exp.fulfill()
             completion(.finish)
         }
@@ -89,7 +89,7 @@ final class LightRouterTests: XCTestCase {
         
         struct Next1Handler: LightRouterHandler {
             let exp: XCTestExpectation
-            func handle(context: LightRouterHandlerContext, completion: LightRouterHandlerCompletion) {
+            func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
                 XCTAssert(context.executedHandlers.isEmpty)
                 XCTAssert(context.userInfo.keys.contains(0))
                 context.userInfo[1] = true
@@ -100,7 +100,7 @@ final class LightRouterTests: XCTestCase {
         
         struct Next2Handler: LightRouterHandler {
             let exp: XCTestExpectation
-            func handle(context: LightRouterHandlerContext, completion: LightRouterHandlerCompletion) {
+            func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
                 XCTAssert(context.executedHandlers.count == 1)
                 XCTAssert(context.userInfo.keys.contains(0))
                 XCTAssert(context.userInfo.keys.contains(1))

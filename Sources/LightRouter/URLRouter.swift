@@ -7,8 +7,6 @@
 
 import Foundation
 
-public typealias RouterParameters = [String: [String]]
-
 protocol URLRouter {
     associatedtype Output
     mutating func register(urlComponents: [String], output: Output)

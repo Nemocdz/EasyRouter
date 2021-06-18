@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias RouterParameters = [String: [String]]
+
 extension String {
     var urlComponents: [String] {
         if let string = addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
