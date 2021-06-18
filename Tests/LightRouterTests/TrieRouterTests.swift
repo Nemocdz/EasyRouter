@@ -17,9 +17,7 @@ final class TrieRouterTests: XCTestCase {
         case e = "a://b/:c/d"
         case f = "a://b/:c/**"
         
-        var output: String {
-            rawValue
-        }
+        var output: String { rawValue }
     }
     
     struct MatchResult {

@@ -70,61 +70,33 @@ extension RouterParametersDecoder {
             return !contains(key)
         }
     
-        func decode(_ type: Bool.Type, forKey key: Key) throws -> Bool {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: Bool.Type, forKey key: Key) throws -> Bool { try _decode(type, forKey: key) }
     
-        func decode(_ type: String.Type, forKey key: Key) throws -> String {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: String.Type, forKey key: Key) throws -> String { try _decode(type, forKey: key) }
     
-        func decode(_ type: Double.Type, forKey key: Key) throws -> Double {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: Double.Type, forKey key: Key) throws -> Double { try _decode(type, forKey: key) }
     
-        func decode(_ type: Float.Type, forKey key: Key) throws -> Float {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: Float.Type, forKey key: Key) throws -> Float { try _decode(type, forKey: key) }
     
-        func decode(_ type: Int.Type, forKey key: Key) throws -> Int {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: Int.Type, forKey key: Key) throws -> Int { try _decode(type, forKey: key) }
     
-        func decode(_ type: Int8.Type, forKey key: Key) throws -> Int8 {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: Int8.Type, forKey key: Key) throws -> Int8 { try _decode(type, forKey: key) }
     
-        func decode(_ type: Int16.Type, forKey key: Key) throws -> Int16 {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: Int16.Type, forKey key: Key) throws -> Int16 { try _decode(type, forKey: key) }
     
-        func decode(_ type: Int32.Type, forKey key: Key) throws -> Int32 {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: Int32.Type, forKey key: Key) throws -> Int32 { try _decode(type, forKey: key) }
     
-        func decode(_ type: Int64.Type, forKey key: Key) throws -> Int64 {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: Int64.Type, forKey key: Key) throws -> Int64 { try _decode(type, forKey: key) }
     
-        func decode(_ type: UInt.Type, forKey key: Key) throws -> UInt {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: UInt.Type, forKey key: Key) throws -> UInt { try _decode(type, forKey: key) }
     
-        func decode(_ type: UInt8.Type, forKey key: Key) throws -> UInt8 {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: UInt8.Type, forKey key: Key) throws -> UInt8 { try _decode(type, forKey: key) }
     
-        func decode(_ type: UInt16.Type, forKey key: Key) throws -> UInt16 {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: UInt16.Type, forKey key: Key) throws -> UInt16 { try _decode(type, forKey: key) }
     
-        func decode(_ type: UInt32.Type, forKey key: Key) throws -> UInt32 {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: UInt32.Type, forKey key: Key) throws -> UInt32 { try _decode(type, forKey: key) }
     
-        func decode(_ type: UInt64.Type, forKey key: Key) throws -> UInt64 {
-            return try _decode(type, forKey: key)
-        }
+        func decode(_ type: UInt64.Type, forKey key: Key) throws -> UInt64 { try _decode(type, forKey: key) }
     
         func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T: Decodable {
             decoder.codingPath.append(key)

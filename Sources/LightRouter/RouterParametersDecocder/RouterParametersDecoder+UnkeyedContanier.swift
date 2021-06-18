@@ -44,65 +44,35 @@ extension RouterParametersDecoder {
             return false
         }
         
-        mutating func decode(_ type: Bool.Type) throws -> Bool {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: Bool.Type) throws -> Bool { try _decode(type) }
         
-        mutating func decode(_ type: String.Type) throws -> String {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: String.Type) throws -> String { try _decode(type) }
         
-        mutating func decode(_ type: Double.Type) throws -> Double {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: Double.Type) throws -> Double { try _decode(type) }
         
-        mutating func decode(_ type: Float.Type) throws -> Float {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: Float.Type) throws -> Float { try _decode(type) }
         
-        mutating func decode(_ type: Int.Type) throws -> Int {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: Int.Type) throws -> Int { try _decode(type) }
         
-        mutating func decode(_ type: Int8.Type) throws -> Int8 {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: Int8.Type) throws -> Int8 { try _decode(type) }
         
-        mutating func decode(_ type: Int16.Type) throws -> Int16 {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: Int16.Type) throws -> Int16 { try _decode(type) }
         
-        mutating func decode(_ type: Int32.Type) throws -> Int32 {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: Int32.Type) throws -> Int32 { try _decode(type) }
         
-        mutating func decode(_ type: Int64.Type) throws -> Int64 {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: Int64.Type) throws -> Int64 { try _decode(type) }
         
-        mutating func decode(_ type: UInt.Type) throws -> UInt {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: UInt.Type) throws -> UInt { try _decode(type) }
         
-        mutating func decode(_ type: UInt8.Type) throws -> UInt8 {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: UInt8.Type) throws -> UInt8 { try _decode(type) }
         
-        mutating func decode(_ type: UInt16.Type) throws -> UInt16 {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: UInt16.Type) throws -> UInt16 { try _decode(type) }
         
-        mutating func decode(_ type: UInt32.Type) throws -> UInt32 {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: UInt32.Type) throws -> UInt32 { try _decode(type) }
         
-        mutating func decode(_ type: UInt64.Type) throws -> UInt64 {
-            return try _decode(type)
-        }
+        mutating func decode(_ type: UInt64.Type) throws -> UInt64 { try _decode(type) }
         
-        mutating func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
-            return try _decode(type)
-        }
+        mutating func decode<T>(_ type: T.Type) throws -> T where T : Decodable { try _decode(type) }
         
         mutating func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
             try checkIndex(type)

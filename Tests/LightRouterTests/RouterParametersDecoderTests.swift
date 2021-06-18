@@ -9,7 +9,6 @@ import XCTest
 @testable import LightRouter
 
 final class RouterParametersDecoderTests: XCTestCase {
-    
     func testDecodeInt() throws {
         let parameters: RouterParameters = ["int": ["1", "-2"]]
         let decoder = RouterParametersDecoder()
@@ -383,7 +382,14 @@ final class RouterParametersDecoderTests: XCTestCase {
     }
     
     func testSnake() throws {
-        let parameters: RouterParameters = ["snake_value": ["1"], "_snake_value": ["1"], "_snake_value_": ["1"]]
+        let parameters: RouterParameters = [
+            "snake_value": ["1"],
+            "_snake_value": ["1"],
+            "_snake_value_": ["1"],
+            "_": ["1"],
+            "_snake": ["1"],
+            "snake_": ["1"],
+        ]
         let decoder = RouterParametersDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         
@@ -392,18 +398,23 @@ final class RouterParametersDecoderTests: XCTestCase {
                 let snakeValue: Int
                 let _snakeValue: Int
                 let _snakeValue_: Int
+                let `_`: Int
+                let _snake: Int
+                let snake_: Int
             }
             
             let object = try decoder.decode(Object.self, from: parameters)
             XCTAssert(object.snakeValue == 1)
             XCTAssert(object._snakeValue == 1)
             XCTAssert(object._snakeValue_ == 1)
+            XCTAssert(object._ == 1)
+            XCTAssert(object._snake == 1)
+            XCTAssert(object.snake_ == 1)
         }
         
         XCTAssertNoThrow(try _testSnake())
     }
     
-
     static var allTests = [
         ("testDecodeInt", testDecodeInt),
         ("testDecodeString", testDecodeString),

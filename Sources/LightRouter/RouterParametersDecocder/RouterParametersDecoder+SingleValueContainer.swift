@@ -17,16 +17,16 @@ extension RouterParametersDecoder {
             return try decoder.castOrThrow(decoder.storage.topContainer, as: String.self)
         }
         
-        func decodeNil() -> Bool {
-            return decoder.storage.count == 0
-        }
-        
-        func typeError<T>(of type: T.Type) -> Error {
+        private func typeError<T>(of type: T.Type) -> Error {
             let description = "Expected to decode \(type) but can't use \(String.self) to init."
             let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
             return DecodingError.typeMismatch(type, context)
         }
         
+        func decodeNil() -> Bool {
+            return decoder.storage.count == 0
+        }
+    
         func decode(_ type: Bool.Type) throws -> Bool {
             let value = try currentValue()
             if let value = Bool(value) {
