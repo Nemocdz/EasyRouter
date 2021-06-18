@@ -15,10 +15,14 @@ public class LightRouter {
 
     public init() {}
 
-    public func register(urlPattern: String, handler: LightRouterHandler) {
+    @discardableResult
+    public func register(urlPattern: String, handler: LightRouterHandler) -> Bool {
+        let urlComponents = urlPattern.urlComponents
+        guard !urlComponents.isEmpty else { return false }
         lock.lock()
-        defer { lock.unlock() }
-        trie.register(urlComponents: urlPattern.urlComponents, output: handler)
+        trie.register(urlComponents: urlComponents, output: handler)
+        lock.unlock()
+        return true
     }
 
     public func route(to url: URL, completion: RouteCompletion? = nil) {
