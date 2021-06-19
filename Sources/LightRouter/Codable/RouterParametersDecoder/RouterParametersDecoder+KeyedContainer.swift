@@ -57,6 +57,12 @@ extension RouterParametersDecoder {
             let value = try find(for: key)
             return try decoder.unbox(value, as: type)
         }
+        
+        private func typeError<T>(of type: T.Type) -> Error {
+            let description = "Expected to decode \(RouterParameters.self) but found \(type) instead."
+            let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
+            return DecodingError.typeMismatch(type, context)
+        }
     
         func contains(_ key: Key) -> Bool {
             if let value = container[key.stringValue], !value.isEmpty {
@@ -114,9 +120,7 @@ extension RouterParametersDecoder {
             decoder.codingPath.append(key)
             defer { decoder.codingPath.removeLast() }
             let value = try find(for: key)
-            let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
-            let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
-            throw DecodingError.typeMismatch(type, context)
+            throw typeError(of: Swift.type(of: value))
         }
     
         func nestedUnkeyedContainer(forKey key: Key) throws -> UnkeyedDecodingContainer {
@@ -127,11 +131,14 @@ extension RouterParametersDecoder {
         }
     
         func superDecoder() throws -> Decoder {
-            fatalError("unreachable")
+            Impl(container: decoder.container, options: decoder.options, codingPath: decoder.codingPath)
         }
     
         func superDecoder(forKey key: Key) throws -> Decoder {
-            fatalError("unreachable")
+            decoder.codingPath.append(key)
+            defer { decoder.codingPath.removeLast() }
+            let value = try find(for: key)
+            throw typeError(of: Swift.type(of: value))
         }
     }
 }

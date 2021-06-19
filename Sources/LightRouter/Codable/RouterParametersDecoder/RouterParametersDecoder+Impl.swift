@@ -14,23 +14,29 @@ extension RouterParametersDecoder {
         var userInfo: [CodingUserInfoKey : Any] { options.userInfo }
         let options: Options
         
+        let container: RouterParameters
+        
         init(container: RouterParameters, options: Options, codingPath: [CodingKey] = []) {
             storage.push(container: container)
             self.options = options
             self.codingPath = codingPath
+            self.container = container
         }
         
         func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key : CodingKey {
-            let container = KeyedContainer<Key>(decoder: self, container: try castOrThrow(storage.topContainer, as: RouterParameters.self))
-            return KeyedDecodingContainer(container)
+            KeyedDecodingContainer(KeyedContainer<Key>(decoder: self,
+                                                       container: try castOrThrow(storage.topContainer,
+                                                                                  as: RouterParameters.self)))
         }
         
         func unkeyedContainer() throws -> UnkeyedDecodingContainer {
-            return UnkeyedContanier(decoder: self, container: try castOrThrow(storage.topContainer, as: [RouterParameters.Value.Element].self))
+            UnkeyedContanier(decoder: self,
+                             container: try castOrThrow(storage.topContainer,
+                                                        as: [RouterParameters.Value.Element].self))
         }
         
         func singleValueContainer() throws -> SingleValueDecodingContainer {
-            return SingleValueContainer(decoder: self)
+            SingleValueContainer(decoder: self)
         }
     }
 }

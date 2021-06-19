@@ -11,7 +11,11 @@ public final class RouterParametersDecoder {
     public var keyDecodingStrategy = KeyDecodingStrategy.useDefaultKeys
     public var userInfo = [CodingUserInfoKey: Any]()
     
-    public func decode<T: Decodable>(_ type: T.Type, from container: RouterParameters) throws -> T {
+    public init() { }
+}
+
+public extension RouterParametersDecoder {
+    func decode<T: Decodable>(_ type: T.Type, from container: RouterParameters) throws -> T {
         let options = Options(keyDecodingStrategy: keyDecodingStrategy, userInfo: userInfo)
         let decoder = Impl(container: container, options: options)
         return try decoder.unbox(container, as: type)

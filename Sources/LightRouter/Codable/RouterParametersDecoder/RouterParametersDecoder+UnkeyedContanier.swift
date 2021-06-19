@@ -81,28 +81,36 @@ extension RouterParametersDecoder {
                 decoder.codingPath.removeLast()
                 currentIndex += 1
             }
-            let value = container[currentIndex]
-            let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
+            let type = Swift.type(of: container[currentIndex])
+            let description = "Expected to decode \(RouterParameters.self) but found \(type) instead."
             let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
             throw DecodingError.typeMismatch(type, context)
         }
         
         mutating func nestedUnkeyedContainer() throws -> UnkeyedDecodingContainer {
-            let type = [String].self
-            try checkIndex(type.self)
+            try checkIndex([RouterParameters.Value.Element].self)
             decoder.codingPath.append(AnyCodingKey(index: currentIndex))
             defer {
                 decoder.codingPath.removeLast()
                 currentIndex += 1
             }
-            let value = container[currentIndex]
-            let description = "Expected to decode \(type) but found \(Swift.type(of: value)) instead."
+            let type = Swift.type(of: container[currentIndex])
+            let description = "Expected to decode \([RouterParameters.Value.Element].self) but found \(type) instead."
             let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
             throw DecodingError.typeMismatch(type, context)
         }
         
         mutating func superDecoder() throws -> Decoder {
-            fatalError("unreachable")
+            try checkIndex([RouterParameters.Value.Element].self)
+            decoder.codingPath.append(AnyCodingKey(index: currentIndex))
+            defer {
+                decoder.codingPath.removeLast()
+                currentIndex += 1
+            }
+            let type = Swift.type(of: container[currentIndex])
+            let description = "Expected to decode \(RouterParameters.self) but found \(type) instead."
+            let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
+            throw DecodingError.typeMismatch(type, context)
         }
     }
 }
