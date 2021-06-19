@@ -51,3 +51,14 @@ extension RouterParameters {
         }
     }
 }
+
+public extension URL {
+    static func build<T>(base: String,
+                         queryParameters: T,
+                         encoder: URLQueryItemsEncoder = .init()
+    ) -> URL? where T: Encodable {
+        var components = URLComponents(string: base)
+        components?.queryItems = try? encoder.encode(queryParameters)
+        return components?.url
+    }
+}
