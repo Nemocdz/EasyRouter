@@ -34,8 +34,10 @@ final class TrieRouterTests: XCTestCase {
     override func setUp() {
         trie = TrieRouter<String>()
         Pattern.allCases.forEach {
-            trie.register(urlComponents: $0.rawValue.urlComponents, output: $0.output)
+            trie.register(components: $0.rawValue.routerComponents, output: $0.output)
         }
+        
+        print(trie)
     }
     
     func testCase1() {
@@ -125,6 +127,28 @@ final class TrieRouterTests: XCTestCase {
         XCTAssert(parameters == result.paramters)
         XCTAssert(outputs == result.outputs)
     }
+    
+    func testInvaildPattern() {
+        let noScheme = "b/c/d"
+        let notURL = "b"
+        
+        XCTAssert(noScheme.routerComponents.isEmpty)
+        XCTAssert(notURL.routerComponents.isEmpty)
+    }
+    
+    func testOverridePattern() {
+        let pattern = "b://c"
+        let url: URL = "b://c"
+        var p = RouterParameters()
+        
+        let output1 = "1"
+        trie.register(components: pattern.routerComponents, output: output1)
+        XCTAssertEqual(trie.match(urlComponents: url.urlComponents, parameters: &p), [output1])
+        
+        let output2 = "2"
+        trie.register(components: pattern.routerComponents, output: output2)
+        XCTAssertEqual(trie.match(urlComponents: url.urlComponents, parameters: &p), [output2])
+    }
 
     static var allTests = [
         ("testCase1", testCase1),
@@ -135,6 +159,8 @@ final class TrieRouterTests: XCTestCase {
         ("testCase6", testCase6),
         ("testCase7", testCase7),
         ("testCase8", testCase8),
+        ("testInvaildPattern", testInvaildPattern),
+        ("testOverridePattern", testOverridePattern)
     ]
 }
 

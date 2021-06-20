@@ -23,10 +23,10 @@ public class LightRouter {
     /// - Returns: 是否注册成功，如果非法字符串则失败
     @discardableResult
     public func register(urlPattern: String, handler: LightRouterHandler) -> Bool {
-        let urlComponents = urlPattern.urlComponents
-        guard !urlComponents.isEmpty else { return false }
+        let components = urlPattern.routerComponents
+        guard !components.isEmpty else { return false }
         lock.lock()
-        trie.register(urlComponents: urlComponents, output: handler)
+        trie.register(components: components, output: handler)
         lock.unlock()
         return true
     }

@@ -9,6 +9,6 @@ import Foundation
 
 protocol URLRouter {
     associatedtype Output
-    mutating func register(urlComponents: [String], output: Output)
+    mutating func register(components: [RouterComponent], output: Output)
     func match(urlComponents: [String], parameters: inout RouterParameters) -> [Output]
 }

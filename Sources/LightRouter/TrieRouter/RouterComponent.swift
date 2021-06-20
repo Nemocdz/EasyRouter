@@ -31,6 +31,7 @@ extension RouterComponent: CustomStringConvertible {
 
 extension RouterComponent: ExpressibleByStringInterpolation {
     init(stringLiteral value: String) {
+        let value = value.lowercased()
         if value.hasPrefix(":") {
             self = .parameter(name: String(value.dropFirst()))
         } else if value == "*" {

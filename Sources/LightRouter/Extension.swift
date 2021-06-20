@@ -9,11 +9,20 @@ import Foundation
 
 public typealias RouterParameters = [String: [String]]
 
+fileprivate let urlSet: CharacterSet = {
+    var set = CharacterSet()
+    set.formUnion(.urlHostAllowed)
+    set.formUnion(.urlPathAllowed)
+    set.formUnion(.urlQueryAllowed)
+    set.formUnion(.urlFragmentAllowed)
+    return set
+}()
+
 extension String {
-    var urlComponents: [String] {
-        if let string = addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+    var routerComponents: [RouterComponent] {
+        if let string = addingPercentEncoding(withAllowedCharacters: urlSet),
            let url = URL(string: string) {
-            return url.urlComponents
+            return url.urlComponents.map { RouterComponent(stringLiteral: $0) }
         }
         return []
     }
@@ -21,16 +30,9 @@ extension String {
 
 extension URL {
     var urlComponents: [String] {
-        var allComponents = [String]()
-        if let scheme = scheme {
-            allComponents.append(scheme)
-        }
-        if let host = host {
-            allComponents.append(host)
-        }
-        let _pathComponents = pathComponents.drop { $0 == "/" }
-        allComponents.append(contentsOf: _pathComponents)
-        return allComponents
+        guard let scheme = scheme, let host = host else { return [] }
+        let allComponents = [scheme] + [host] + pathComponents.drop { $0 == "/" }
+        return allComponents.map { $0.lowercased() }
     }
     
     var queryItems: [URLQueryItem] {

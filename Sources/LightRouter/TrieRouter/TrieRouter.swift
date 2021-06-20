@@ -12,10 +12,8 @@ final class TrieRouter<O> {
 }
 
 extension TrieRouter: URLRouter {
-    func register(urlComponents: [String], output: O) {
+    func register(components: [RouterComponent], output: O) {
         var currentNode = root
-        let components = urlComponents.map { RouterComponent(stringLiteral: $0.lowercased()) }
-        
         for component in components {
             currentNode = currentNode.addOrFindNextNode(of: component)
             if case .catchall = component {
@@ -23,10 +21,7 @@ extension TrieRouter: URLRouter {
             }
         }
         
-        if currentNode.output != nil {
-            assertionFailure("url pattern is exist")
-        }
-        
+        // override
         currentNode.output = output
     }
     
@@ -42,7 +37,7 @@ extension TrieRouter: URLRouter {
                 }
             }
             
-            if let node = currentNode.constants[component.lowercased()] {
+            if let node = currentNode.constants[component] {
                 // 直接匹配
                 currentNode = node
             } else if let (name, node) = currentNode.parameter {
