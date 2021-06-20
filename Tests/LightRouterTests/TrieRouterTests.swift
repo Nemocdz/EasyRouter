@@ -36,7 +36,6 @@ final class TrieRouterTests: XCTestCase {
         Pattern.allCases.forEach {
             trie.register(components: $0.rawValue.routerComponents, output: $0.output)
         }
-        
         print(trie)
     }
     
@@ -47,8 +46,8 @@ final class TrieRouterTests: XCTestCase {
         var parameters = RouterParameters()
         let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
         
-        XCTAssert(parameters == result.paramters)
-        XCTAssert(outputs == result.outputs)
+        XCTAssertEqual(parameters, result.paramters)
+        XCTAssertEqual(outputs, result.outputs)
     }
     
     func testCase2() {
@@ -58,8 +57,8 @@ final class TrieRouterTests: XCTestCase {
         var parameters = RouterParameters()
         let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
         
-        XCTAssert(parameters == result.paramters)
-        XCTAssert(outputs == result.outputs)
+        XCTAssertEqual(parameters, result.paramters)
+        XCTAssertEqual(outputs, result.outputs)
     }
     
     func testCase3() {
@@ -69,8 +68,8 @@ final class TrieRouterTests: XCTestCase {
         var parameters = RouterParameters()
         let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
         
-        XCTAssert(parameters == result.paramters)
-        XCTAssert(outputs == result.outputs)
+        XCTAssertEqual(parameters, result.paramters)
+        XCTAssertEqual(outputs, result.outputs)
     }
     
     func testCase4() {
@@ -80,8 +79,8 @@ final class TrieRouterTests: XCTestCase {
         var parameters = RouterParameters()
         let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
         
-        XCTAssert(parameters == result.paramters)
-        XCTAssert(outputs == result.outputs)
+        XCTAssertEqual(parameters, result.paramters)
+        XCTAssertEqual(outputs, result.outputs)
     }
     
     func testCase5() {
@@ -91,8 +90,8 @@ final class TrieRouterTests: XCTestCase {
         var parameters = RouterParameters()
         let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
         
-        XCTAssert(parameters == result.paramters)
-        XCTAssert(outputs == result.outputs)
+        XCTAssertEqual(parameters, result.paramters)
+        XCTAssertEqual(outputs, result.outputs)
     }
     
     func testCase6() {
@@ -102,8 +101,8 @@ final class TrieRouterTests: XCTestCase {
         var parameters = RouterParameters()
         let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
         
-        XCTAssert(parameters == result.paramters)
-        XCTAssert(outputs == result.outputs)
+        XCTAssertEqual(parameters, result.paramters)
+        XCTAssertEqual(outputs, result.outputs)
     }
     
     func testCase7() {
@@ -113,8 +112,8 @@ final class TrieRouterTests: XCTestCase {
         var parameters = RouterParameters()
         let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
         
-        XCTAssert(parameters == result.paramters)
-        XCTAssert(outputs == result.outputs)
+        XCTAssertEqual(parameters, result.paramters)
+        XCTAssertEqual(outputs, result.outputs)
     }
     
     func testCase8() {
@@ -124,8 +123,8 @@ final class TrieRouterTests: XCTestCase {
         var parameters = RouterParameters()
         let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
         
-        XCTAssert(parameters == result.paramters)
-        XCTAssert(outputs == result.outputs)
+        XCTAssertEqual(parameters, result.paramters)
+        XCTAssertEqual(outputs, result.outputs)
     }
     
     func testInvaildPattern() {

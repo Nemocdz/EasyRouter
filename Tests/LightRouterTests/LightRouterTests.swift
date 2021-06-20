@@ -51,7 +51,7 @@ final class LightRouterTests: XCTestCase {
         
         let result = router.routeResult(of: "a://b")
         
-        XCTAssert(result.handlers.count == 2)
+        XCTAssertEqual(result.handlers.count, 2)
         
         router.handleRouteResult(result) { result in
             completion.fulfill()
@@ -75,7 +75,7 @@ final class LightRouterTests: XCTestCase {
                 case .success:
                     XCTFail()
                 case .failure(let error):
-                    XCTAssert(error == .mismatch)
+                    XCTAssertEqual(error, .mismatch)
             }
         }
     
@@ -101,7 +101,7 @@ final class LightRouterTests: XCTestCase {
         struct Next2Handler: LightRouterHandler {
             let exp: XCTestExpectation
             func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
-                XCTAssert(context.executedHandlers.count == 1)
+                XCTAssertEqual(context.executedHandlers.count, 1)
                 XCTAssert(context.userInfo.keys.contains(0))
                 XCTAssert(context.userInfo.keys.contains(1))
                 context.userInfo[2] = true
@@ -115,7 +115,7 @@ final class LightRouterTests: XCTestCase {
         router.register(urlPattern: "a://b", handler: Next2Handler(exp: next2))
         
         let result = router.routeResult(of: "a://b")
-        XCTAssert(result.handlers.count == 2)
+        XCTAssertEqual(result.handlers.count, 2)
         XCTAssert(result.context.executedHandlers.isEmpty)
         result.context.userInfo[0] = true
         
@@ -123,7 +123,7 @@ final class LightRouterTests: XCTestCase {
             completion.fulfill()
             switch result {
                 case .success(let context):
-                    XCTAssert(context.executedHandlers.count == 2)
+                    XCTAssertEqual(context.executedHandlers.count, 2)
                     XCTAssert(context.userInfo.keys.contains(0))
                     XCTAssert(context.userInfo.keys.contains(1))
                     XCTAssert(context.userInfo.keys.contains(2))
@@ -201,7 +201,7 @@ final class LightRouterTests: XCTestCase {
         router.register(urlPattern: "a://**", handler: NextHandler())
         let result = router.routeResult(of: "a://b?key=value")
 
-        XCTAssert(result.context.parameters == ["key": ["value"]])
+        XCTAssertEqual(result.context.parameters, ["key": ["value"]])
     }
     
     func testMuilQueryItems() {
@@ -215,7 +215,7 @@ final class LightRouterTests: XCTestCase {
         router.register(urlPattern: "a://b/:c/**", handler: NextHandler())
         let result = router.routeResult(of: "a://b/c1/d?c=c1&c=c2")
 
-        XCTAssert(result.context.parameters == ["c": ["c1", "c1", "c2"]])
+        XCTAssertEqual(result.context.parameters, ["c": ["c1", "c1", "c2"]])
     }
     
     static var allTests = [
@@ -229,4 +229,3 @@ final class LightRouterTests: XCTestCase {
         ("testMuilQueryItems", testMuilQueryItems),
     ]
 }
-    
