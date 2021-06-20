@@ -24,8 +24,8 @@ extension TrieRouter {
                 }
                 constants[string] = node
             case .parameter(let name):
-                if let (existingName, existingNode) = parameter {
-                    assert(existingName == name, "Route parameter name mismatch \(existingName) != \(name)")
+                if let (_, existingNode) = parameter {
+                    parameter = (name, existingNode)
                     return existingNode
                 }
                 parameter = (name, node)

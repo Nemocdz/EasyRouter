@@ -130,12 +130,14 @@ final class TrieRouterTests: XCTestCase {
     func testInvaildPattern() {
         let noScheme = "b/c/d"
         let notURL = "b"
+        let noHost = "a://:c"
         
         XCTAssert(noScheme.routerComponents.isEmpty)
         XCTAssert(notURL.routerComponents.isEmpty)
+        XCTAssert(noHost.routerComponents.isEmpty)
     }
     
-    func testOverridePattern() {
+    func testOverridePattern1() {
         let pattern = "b://c"
         let url: URL = "b://c"
         var p = RouterParameters()
@@ -148,6 +150,24 @@ final class TrieRouterTests: XCTestCase {
         trie.register(components: pattern.routerComponents, output: output2)
         XCTAssertEqual(trie.match(urlComponents: url.urlComponents, parameters: &p), [output2])
     }
+    
+    func testOverridePattern2() {
+        let url: URL = "c://a/1"
+        
+        let pattern = "c://a/:b"
+        let output1 = "1"
+        var p1 = RouterParameters()
+        trie.register(components: pattern.routerComponents, output: output1)
+        XCTAssertEqual(trie.match(urlComponents: url.urlComponents, parameters: &p1), [output1])
+        XCTAssertEqual(p1["b"], ["1"])
+        
+        let pattern2 = "c://a/:c"
+        let output2 = "2"
+        var p2 = RouterParameters()
+        trie.register(components: pattern2.routerComponents, output: output2)
+        XCTAssertEqual(trie.match(urlComponents: url.urlComponents, parameters: &p2), [output2])
+        XCTAssertEqual(p2["c"], ["1"])
+    }
 
     static var allTests = [
         ("testCase1", testCase1),
@@ -159,7 +179,8 @@ final class TrieRouterTests: XCTestCase {
         ("testCase7", testCase7),
         ("testCase8", testCase8),
         ("testInvaildPattern", testInvaildPattern),
-        ("testOverridePattern", testOverridePattern)
+        ("testOverridePattern1", testOverridePattern1),
+        ("testOverridePattern2", testOverridePattern2),
     ]
 }
 

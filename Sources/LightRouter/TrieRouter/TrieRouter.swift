@@ -42,9 +42,7 @@ extension TrieRouter: URLRouter {
                 currentNode = node
             } else if let (name, node) = currentNode.parameter {
                 // 参数匹配
-                if let component = component.removingPercentEncoding {
-                    parameters.addValue(component, forKey: name)
-                }
+                parameters.addValue(component, forKey: name)
                 currentNode = node
             } else if let node = currentNode.anything {
                 // 通配符匹配

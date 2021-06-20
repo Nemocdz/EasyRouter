@@ -30,7 +30,12 @@ extension String {
 
 extension URL {
     var urlComponents: [String] {
-        guard let scheme = scheme, let host = host else { return [] }
+        guard let scheme = scheme,
+              !scheme.isEmpty,
+              let host = host,
+              !host.isEmpty else {
+            return []
+        }
         let allComponents = [scheme] + [host] + pathComponents.drop { $0 == "/" }
         return allComponents.map { $0.lowercased() }
     }
@@ -45,6 +50,7 @@ extension URL {
 
 extension RouterParameters {
     mutating func addValue(_ value: Value.Element, forKey key: Key) {
+        guard let value = value.removingPercentEncoding else { return }
         if var array = self[key] {
             array.append(value)
             self[key] = array
