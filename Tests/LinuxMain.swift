@@ -1,7 +1,7 @@
 import XCTest
 
-import LightRouterTests
+import EasyRouterTests
 
 var tests = [XCTestCaseEntry]()
-tests += LightRouterTests.allTests()
+tests += EasyRouterTests.allTests()
 XCTMain(tests)

@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import LightRouter
+@testable import EasyRouter
 
 final class RouterParametersDecoderTests: XCTestCase {
     func testDecodeInt() throws {

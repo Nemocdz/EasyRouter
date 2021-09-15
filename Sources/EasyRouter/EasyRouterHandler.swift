@@ -7,18 +7,18 @@
 
 import Foundation
 
-public typealias LightRouterHandlerCompletion = (LightRouterHandlerResult) -> Void
+public typealias EasyRouterHandlerCompletion = (EasyRouterHandlerResult) -> Void
 
-public protocol LightRouterHandler {
+public protocol EasyRouterHandler {
     
     /// 中间件执行函数
     /// - Parameters:
     ///   - context: 上下文
     ///   - completion: 执行结束结果
-    func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion)
+    func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion)
 }
 
-public protocol LightRouterModelHandler: LightRouterHandler {
+public protocol EasyRouterModelHandler: EasyRouterHandler {
     associatedtype Parameters: Decodable
     
     /// 参数解码器
@@ -29,11 +29,11 @@ public protocol LightRouterModelHandler: LightRouterHandler {
     ///   - context: 上下文
     ///   - result: 参数模型结果
     ///   - completion: 执行结束结果
-    func handle(context: LightRouterHandlerContext, result: Result<Parameters, Error>, completion: @escaping LightRouterHandlerCompletion)
+    func handle(context: EasyRouterHandlerContext, result: Result<Parameters, Error>, completion: @escaping EasyRouterHandlerCompletion)
 }
 
-public extension LightRouterModelHandler {
-    func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
+public extension EasyRouterModelHandler {
+    func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
         let result: Result<Parameters, Error>
         do {
             let model = try parametersDecoder.decode(Parameters.self, from: context.parameters)

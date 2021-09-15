@@ -5,21 +5,21 @@
 //  Created by Nemo on 2021/6/18.
 //
 
-@testable import LightRouter
+@testable import EasyRouter
 import XCTest
 
-final class LightRouterTests: XCTestCase {
-    struct NextHandler: LightRouterHandler {
+final class EasyRouterTests: XCTestCase {
+    struct NextHandler: EasyRouterHandler {
         let exp: XCTestExpectation
-        func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
+        func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
             exp.fulfill()
             completion(.next)
         }
     }
     
-    struct FinishHandler: LightRouterHandler {
+    struct FinishHandler: EasyRouterHandler {
         let exp: XCTestExpectation
-        func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
+        func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
             exp.fulfill()
             completion(.finish)
         }
@@ -29,7 +29,7 @@ final class LightRouterTests: XCTestCase {
         let next = expectation(description: "next")
         let completion = expectation(description: "completion")
         
-        let router = LightRouter()
+        let router = EasyRouter()
         router.register(urlPattern: "a://**", handler: NextHandler(exp: next))
         router.route(to: "a://b") { result in
             completion.fulfill()
@@ -45,7 +45,7 @@ final class LightRouterTests: XCTestCase {
         let finish = expectation(description: "finish")
         let completion = expectation(description: "completion")
         
-        let router = LightRouter()
+        let router = EasyRouter()
         router.register(urlPattern: "a://b", handler: NextHandler(exp: next))
         router.register(urlPattern: "a://**", handler: FinishHandler(exp: finish))
         
@@ -63,7 +63,7 @@ final class LightRouterTests: XCTestCase {
     
     func testMismatch() {
         let completion = expectation(description: "completion")
-        let router = LightRouter()
+        let router = EasyRouter()
         
         let result = router.routeResult(of: "a://b")
         
@@ -87,9 +87,9 @@ final class LightRouterTests: XCTestCase {
         let next2 = expectation(description: "finish")
         let completion = expectation(description: "completion")
         
-        struct Next1Handler: LightRouterHandler {
+        struct Next1Handler: EasyRouterHandler {
             let exp: XCTestExpectation
-            func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
+            func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
                 XCTAssert(context.executedHandlers.isEmpty)
                 XCTAssert(context.userInfo.keys.contains(0))
                 context.userInfo[1] = true
@@ -98,9 +98,9 @@ final class LightRouterTests: XCTestCase {
             }
         }
         
-        struct Next2Handler: LightRouterHandler {
+        struct Next2Handler: EasyRouterHandler {
             let exp: XCTestExpectation
-            func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
+            func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
                 XCTAssertEqual(context.executedHandlers.count, 1)
                 XCTAssert(context.userInfo.keys.contains(0))
                 XCTAssert(context.userInfo.keys.contains(1))
@@ -110,7 +110,7 @@ final class LightRouterTests: XCTestCase {
             }
         }
         
-        let router = LightRouter()
+        let router = EasyRouter()
         router.register(urlPattern: "a://**", handler: Next1Handler(exp: next1))
         router.register(urlPattern: "a://b", handler: Next2Handler(exp: next2))
         
@@ -139,7 +139,7 @@ final class LightRouterTests: XCTestCase {
         let next = expectation(description: "next")
         let completion = expectation(description: "completion")
         
-        struct ModelHandler: LightRouterModelHandler {
+        struct ModelHandler: EasyRouterModelHandler {
             struct Parameters: Decodable {
                 let name: String
                 let age: Int
@@ -147,14 +147,14 @@ final class LightRouterTests: XCTestCase {
             
             let exp: XCTestExpectation
             
-            func handle(context: LightRouterHandlerContext, result: Result<Parameters, Error>, completion: LightRouterHandlerCompletion) {
+            func handle(context: EasyRouterHandlerContext, result: Result<Parameters, Error>, completion: EasyRouterHandlerCompletion) {
                 XCTAssertNotNil(try? result.get())
                 exp.fulfill()
                 completion(.next)
             }
         }
         
-        let router = LightRouter()
+        let router = EasyRouter()
         router.register(urlPattern: "a://**", handler: ModelHandler(exp: next))
         router.route(to: "a://b?name=hello&age=2") { result in
             completion.fulfill()
@@ -168,10 +168,10 @@ final class LightRouterTests: XCTestCase {
         let next = expectation(description: "next")
         let completion = expectation(description: "completion")
         
-        struct NextHandler: LightRouterHandler {
+        struct NextHandler: EasyRouterHandler {
             let exp: XCTestExpectation
             
-            func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
+            func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
                 exp.fulfill()
                 DispatchQueue.global().async {
                     completion(.next)
@@ -179,7 +179,7 @@ final class LightRouterTests: XCTestCase {
             }
         }
         
-        let router = LightRouter()
+        let router = EasyRouter()
         router.register(urlPattern: "a://**", handler: NextHandler(exp: next))
         router.route(to: "a://b") { result in
             completion.fulfill()
@@ -190,14 +190,14 @@ final class LightRouterTests: XCTestCase {
     }
     
     func testQueryItems() {
-        struct NextHandler: LightRouterHandler {
-            func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
+        struct NextHandler: EasyRouterHandler {
+            func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
                 completion(.next)
             }
         }
 
 
-        let router = LightRouter()
+        let router = EasyRouter()
         router.register(urlPattern: "a://**", handler: NextHandler())
         let result = router.routeResult(of: "a://b?key=value")
 
@@ -205,13 +205,13 @@ final class LightRouterTests: XCTestCase {
     }
     
     func testMuilQueryItems() {
-        struct NextHandler: LightRouterHandler {
-            func handle(context: LightRouterHandlerContext, completion: @escaping LightRouterHandlerCompletion) {
+        struct NextHandler: EasyRouterHandler {
+            func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
                 completion(.next)
             }
         }
 
-        let router = LightRouter()
+        let router = EasyRouter()
         router.register(urlPattern: "a://b/:c/**", handler: NextHandler())
         let result = router.routeResult(of: "a://b/c1/d?c=c1&c=c2")
 

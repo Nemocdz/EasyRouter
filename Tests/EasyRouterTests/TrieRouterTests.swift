@@ -5,7 +5,7 @@
 //  Created by Nemo on 2021/6/8.
 //
 
-@testable import LightRouter
+@testable import EasyRouter
 import XCTest
 
 final class TrieRouterTests: XCTestCase {

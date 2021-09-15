@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum LightRouterHandlerResult {
+public enum EasyRouterHandlerResult {
     // 执行下一个处理者
     case next
     // 中断并结束处理

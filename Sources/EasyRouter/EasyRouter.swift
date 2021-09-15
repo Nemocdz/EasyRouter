@@ -7,10 +7,10 @@
 
 import Foundation
 
-public class LightRouter {
-    public typealias RouteCompletion = (Result<LightRouterHandlerContext, Error>) -> Void
+public class EasyRouter {
+    public typealias RouteCompletion = (Result<EasyRouterHandlerContext, Error>) -> Void
 
-    private let trie = TrieRouter<LightRouterHandler>()
+    private let trie = TrieRouter<EasyRouterHandler>()
     private let lock = NSLock()
 
     public init() {}
@@ -22,7 +22,7 @@ public class LightRouter {
     ///   - handler: 中间件
     /// - Returns: 是否注册成功，如果非法字符串则失败
     @discardableResult
-    public func register(urlPattern: String, handler: LightRouterHandler) -> Bool {
+    public func register(urlPattern: String, handler: EasyRouterHandler) -> Bool {
         let components = urlPattern.routerComponents
         guard !components.isEmpty else { return false }
         lock.lock()
@@ -53,7 +53,7 @@ public class LightRouter {
                 parameters.addValue(value, forKey: $0.name)
             }
         }
-        let context = LightRouterHandlerContext(url: url, parameters: parameters)
+        let context = EasyRouterHandlerContext(url: url, parameters: parameters)
         return RouteResult(context: context, handlers: handlers)
     }
 
@@ -91,13 +91,13 @@ public class LightRouter {
     }
 }
 
-public extension LightRouter {
+public extension EasyRouter {
     struct RouteResult {
         /// 处理过程上下文
-        public let context: LightRouterHandlerContext
+        public let context: EasyRouterHandlerContext
         
         /// 所有匹配到的中间件
-        public let handlers: [LightRouterHandler]
+        public let handlers: [EasyRouterHandler]
 
         /// 是否可有匹配结果可以处理
         public var canHandle: Bool {
@@ -106,7 +106,7 @@ public extension LightRouter {
     }
 }
 
-public extension LightRouter {
+public extension EasyRouter {
     enum Error: Swift.Error {
         case mismatch
     }

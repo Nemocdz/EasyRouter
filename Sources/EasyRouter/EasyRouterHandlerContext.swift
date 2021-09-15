@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class LightRouterHandlerContext {
+public final class EasyRouterHandlerContext {
     
     /// 原始 url
     public let url: URL
@@ -16,7 +16,7 @@ public final class LightRouterHandlerContext {
     public let parameters: RouterParameters
     
     /// 已经执行的中间件
-    public internal(set) var executedHandlers: [LightRouterHandler] = []
+    public internal(set) var executedHandlers: [EasyRouterHandler] = []
     
     /// 自定义的信息
     public var userInfo: [AnyHashable: Any] = [:]

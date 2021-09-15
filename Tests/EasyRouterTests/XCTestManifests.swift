@@ -5,7 +5,7 @@ public func allTests() -> [XCTestCaseEntry] {
     return [
         testCase(TrieRouterTests.allTests),
         testCase(RouterParametersDecoderTests.allTests),
-        testCase(LightRouterHandlerTests.allTests),
+        testCase(EasyRouterHandlerTests.allTests),
         testCase(URLQueryItemsEncoderTests.allTests),
     ]
 }
