@@ -59,12 +59,16 @@ extension RouterParameters {
 }
 
 public extension URL {
-    static func build<T>(base: String,
-                         queryParameters: T,
-                         encoder: URLQueryItemsEncoder = .init()
-    ) -> URL? where T: Encodable {
+    init?<T>(base: String,
+            queryParameters: T,
+            encoder: URLQueryItemsEncoder = .init()
+    ) where T: Encodable {
         var components = URLComponents(string: base)
         components?.queryItems = try? encoder.encode(queryParameters)
-        return components?.url
+        if let url = components?.url {
+            self = url
+        } else {
+            return nil
+        }
     }
 }

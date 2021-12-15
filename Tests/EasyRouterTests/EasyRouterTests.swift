@@ -53,7 +53,7 @@ final class EasyRouterTests: XCTestCase {
         
         XCTAssertEqual(result.handlers.count, 2)
         
-        router.handleRouteResult(result) { result in
+        result.handle { result in
             completion.fulfill()
             XCTAssertNotNil(try? result.get())
         }
@@ -62,24 +62,11 @@ final class EasyRouterTests: XCTestCase {
     }
     
     func testMismatch() {
-        let completion = expectation(description: "completion")
         let router = EasyRouter()
         
         let result = router.routeResult(of: "a://b")
         
-        XCTAssert(!result.canHandle)
-        
-        router.handleRouteResult(result) { result in
-            completion.fulfill()
-            switch result {
-                case .success:
-                    XCTFail()
-                case .failure(let error):
-                    XCTAssertEqual(error, .mismatch)
-            }
-        }
-    
-        wait(for: [completion], timeout: 1)
+        XCTAssert(result.handlers.isEmpty)
     }
     
     func testContext() {
@@ -119,7 +106,7 @@ final class EasyRouterTests: XCTestCase {
         XCTAssert(result.context.executedHandlers.isEmpty)
         result.context.userInfo[0] = true
         
-        router.handleRouteResult(result) { result in
+        result.handle{ result in
             completion.fulfill()
             switch result {
                 case .success(let context):

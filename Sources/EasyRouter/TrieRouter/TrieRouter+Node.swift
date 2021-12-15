@@ -14,34 +14,6 @@ extension TrieRouter {
         var anything: Node?
         var catchall: Node?
         var output: T?
-        
-        func addOrFindNextNode(of component: Component) -> Node {
-            let node = Node()
-            switch component {
-            case .constant(let string):
-                if let exsitingNode = constants[string] {
-                    return exsitingNode
-                }
-                constants[string] = node
-            case .parameter(let name):
-                if let (_, existingNode) = parameter {
-                    parameter = (name, existingNode)
-                    return existingNode
-                }
-                parameter = (name, node)
-            case .catchall:
-                if let node = catchall {
-                    return node
-                }
-                catchall = node
-            case .anything:
-                if let node = anything {
-                    return node
-                }
-                anything = node
-            }
-            return node
-        }
     }
 }
 

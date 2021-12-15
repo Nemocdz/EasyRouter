@@ -11,6 +11,6 @@ public typealias RouterParameters = [String: [String]]
 
 public protocol URLRouter {
     associatedtype Output
-    mutating func register(components: [String], output: Output)
+    mutating func register(pathComponents: [RouterPathComponent], output: Output)
     func match(components: [String], parameters: inout RouterParameters) -> [Output]
 }

@@ -7,8 +7,8 @@
 
 import Foundation
 
-class URLRouterBoxBase<T>: URLRouter {
-    func register(components: [String], output: T) {
+class URLRouterBox<T>: URLRouter {
+    func register(pathComponents: [RouterPathComponent], output: T) {
         fatalError()
     }
     
@@ -17,15 +17,15 @@ class URLRouterBoxBase<T>: URLRouter {
     }
 }
 
-final class URLRouterBox<Base: URLRouter>: URLRouterBoxBase<Base.Output> {
+final class URLRouterBoxImp<Base: URLRouter>: URLRouterBox<Base.Output>  {
     private var base: Base
     
     init(_ base: Base) {
         self.base = base
     }
     
-    override func register(components: [String], output: Base.Output) {
-        base.register(components: components, output: output)
+    override func register(pathComponents: [RouterPathComponent], output: Base.Output) {
+        base.register(pathComponents: pathComponents, output: output)
     }
     
     override func match(components: [String], parameters: inout RouterParameters) -> [Base.Output] {
@@ -34,14 +34,14 @@ final class URLRouterBox<Base: URLRouter>: URLRouterBoxBase<Base.Output> {
 }
 
 struct AnyURLRouter<T>: URLRouter {
-    private var box: URLRouterBoxBase<T>
+    private let box: URLRouterBox<T>
     
     init<Base>(_ base: Base) where Base: URLRouter, Base.Output == T {
-        box = URLRouterBox(base)
+        box = URLRouterBoxImp(base)
     }
     
-    func register(components: [String], output: T) {
-        box.register(components: components, output: output)
+    func register(pathComponents: [RouterPathComponent], output: T) {
+        box.register(pathComponents: pathComponents, output: output)
     }
     
     func match(components: [String], parameters: inout RouterParameters) -> [T] {

@@ -34,7 +34,7 @@ final class TrieRouterTests: XCTestCase {
     override func setUp() {
         trie = TrieRouter<String>()
         Pattern.allCases.forEach {
-            trie.register(components: $0.rawValue.urlComponents, output: $0.output)
+            trie.register(pathComponents: $0.rawValue.pathComponets, output: $0.output)
         }
         print(trie)
     }
@@ -143,11 +143,11 @@ final class TrieRouterTests: XCTestCase {
         var p = RouterParameters()
         
         let output1 = "1"
-        trie.register(components: pattern.urlComponents, output: output1)
+        trie.register(pathComponents: pattern.pathComponets, output: output1)
         XCTAssertEqual(trie.match(components: url.urlComponents, parameters: &p), [output1])
         
         let output2 = "2"
-        trie.register(components: pattern.urlComponents, output: output2)
+        trie.register(pathComponents: pattern.pathComponets, output: output2)
         XCTAssertEqual(trie.match(components: url.urlComponents, parameters: &p), [output2])
     }
     
@@ -157,14 +157,14 @@ final class TrieRouterTests: XCTestCase {
         let pattern = "c://a/:b"
         let output1 = "1"
         var p1 = RouterParameters()
-        trie.register(components: pattern.urlComponents, output: output1)
+        trie.register(pathComponents: pattern.pathComponets, output: output1)
         XCTAssertEqual(trie.match(components: url.urlComponents, parameters: &p1), [output1])
         XCTAssertEqual(p1["b"], ["1"])
         
         let pattern2 = "c://a/:c"
         let output2 = "2"
         var p2 = RouterParameters()
-        trie.register(components: pattern2.urlComponents, output: output2)
+        trie.register(pathComponents: pattern2.pathComponets, output: output2)
         XCTAssertEqual(trie.match(components: url.urlComponents, parameters: &p2), [output2])
         XCTAssertEqual(p2["c"], ["1"])
     }
@@ -187,5 +187,11 @@ final class TrieRouterTests: XCTestCase {
 extension URL: ExpressibleByStringLiteral {
     public init(stringLiteral value: StaticString) {
         self = URL(string: "\(value)")!
+    }
+}
+
+extension String {
+    var pathComponets: [RouterPathComponent] {
+        urlComponents.map { RouterPathComponent(stringLiteral: $0) }
     }
 }
