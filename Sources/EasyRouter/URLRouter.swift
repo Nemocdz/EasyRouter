@@ -7,8 +7,10 @@
 
 import Foundation
 
-protocol URLRouter {
+public typealias RouterParameters = [String: [String]]
+
+public protocol URLRouter {
     associatedtype Output
-    mutating func register(components: [RouterComponent], output: Output)
-    func match(urlComponents: [String], parameters: inout RouterParameters) -> [Output]
+    mutating func register(components: [String], output: Output)
+    func match(components: [String], parameters: inout RouterParameters) -> [Output]
 }

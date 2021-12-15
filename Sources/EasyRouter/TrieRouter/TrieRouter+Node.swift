@@ -13,9 +13,9 @@ extension TrieRouter {
         var parameter: (name: String, node: Node)?
         var anything: Node?
         var catchall: Node?
-        var output: O?
+        var output: T?
         
-        func addOrFindNextNode(of component: RouterComponent) -> Node {
+        func addOrFindNextNode(of component: Component) -> Node {
             let node = Node()
             switch component {
             case .constant(let string):

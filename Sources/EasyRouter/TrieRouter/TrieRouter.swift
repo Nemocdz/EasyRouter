@@ -7,14 +7,14 @@
 
 import Foundation
 
-final class TrieRouter<O> {
+class TrieRouter<T> {
     private let root = Node()
 }
 
 extension TrieRouter: URLRouter {
-    func register(components: [RouterComponent], output: O) {
+    func register(components: [String], output: T) {
         var currentNode = root
-        for component in components {
+        for component in components.map({ Component(stringLiteral: $0) }) {
             currentNode = currentNode.addOrFindNextNode(of: component)
             if case .catchall = component {
                 break
@@ -25,11 +25,11 @@ extension TrieRouter: URLRouter {
         currentNode.output = output
     }
     
-    func match(urlComponents: [String], parameters: inout RouterParameters) -> [O] {
+    func match(components: [String], parameters: inout RouterParameters) -> [T] {
         var currentNode = root
         var outputs = [Output]()
         var isEnd = true
-        for component in urlComponents {
+        for component in components {
             // 尾通配符匹配
             if let node = currentNode.catchall {
                 if let output = node.output {

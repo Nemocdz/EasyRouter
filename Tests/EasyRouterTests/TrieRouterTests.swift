@@ -34,7 +34,7 @@ final class TrieRouterTests: XCTestCase {
     override func setUp() {
         trie = TrieRouter<String>()
         Pattern.allCases.forEach {
-            trie.register(components: $0.rawValue.routerComponents, output: $0.output)
+            trie.register(components: $0.rawValue.urlComponents, output: $0.output)
         }
         print(trie)
     }
@@ -44,7 +44,7 @@ final class TrieRouterTests: XCTestCase {
         let result = MatchResult(paramters: [:], patterns: [])
         
         var parameters = RouterParameters()
-        let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
+        let outputs = trie.match(components: url.urlComponents, parameters: &parameters)
         
         XCTAssertEqual(parameters, result.paramters)
         XCTAssertEqual(outputs, result.outputs)
@@ -55,7 +55,7 @@ final class TrieRouterTests: XCTestCase {
         let result = MatchResult(paramters: [:], patterns: [.a])
         
         var parameters = RouterParameters()
-        let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
+        let outputs = trie.match(components: url.urlComponents, parameters: &parameters)
         
         XCTAssertEqual(parameters, result.paramters)
         XCTAssertEqual(outputs, result.outputs)
@@ -66,7 +66,7 @@ final class TrieRouterTests: XCTestCase {
         let result = MatchResult(paramters: [:], patterns: [.a, .c, .b])
         
         var parameters = RouterParameters()
-        let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
+        let outputs = trie.match(components: url.urlComponents, parameters: &parameters)
         
         XCTAssertEqual(parameters, result.paramters)
         XCTAssertEqual(outputs, result.outputs)
@@ -77,7 +77,7 @@ final class TrieRouterTests: XCTestCase {
         let result = MatchResult(paramters: ["c": ["d"]], patterns: [.a, .c])
         
         var parameters = RouterParameters()
-        let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
+        let outputs = trie.match(components: url.urlComponents, parameters: &parameters)
         
         XCTAssertEqual(parameters, result.paramters)
         XCTAssertEqual(outputs, result.outputs)
@@ -88,7 +88,7 @@ final class TrieRouterTests: XCTestCase {
         let result = MatchResult(paramters: [:], patterns: [.a, .d])
         
         var parameters = RouterParameters()
-        let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
+        let outputs = trie.match(components: url.urlComponents, parameters: &parameters)
         
         XCTAssertEqual(parameters, result.paramters)
         XCTAssertEqual(outputs, result.outputs)
@@ -99,7 +99,7 @@ final class TrieRouterTests: XCTestCase {
         let result = MatchResult(paramters: ["c": ["e"]], patterns: [.a, .c, .f, .e])
         
         var parameters = RouterParameters()
-        let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
+        let outputs = trie.match(components: url.urlComponents, parameters: &parameters)
         
         XCTAssertEqual(parameters, result.paramters)
         XCTAssertEqual(outputs, result.outputs)
@@ -110,7 +110,7 @@ final class TrieRouterTests: XCTestCase {
         let result = MatchResult(paramters: ["c": ["e"]], patterns: [.a, .c, .f])
         
         var parameters = RouterParameters()
-        let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
+        let outputs = trie.match(components: url.urlComponents, parameters: &parameters)
         
         XCTAssertEqual(parameters, result.paramters)
         XCTAssertEqual(outputs, result.outputs)
@@ -121,7 +121,7 @@ final class TrieRouterTests: XCTestCase {
         let result = MatchResult(paramters: [:], patterns: [.a, .c])
         
         var parameters = RouterParameters()
-        let outputs = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
+        let outputs = trie.match(components: url.urlComponents, parameters: &parameters)
         
         XCTAssertEqual(parameters, result.paramters)
         XCTAssertEqual(outputs, result.outputs)
@@ -132,9 +132,9 @@ final class TrieRouterTests: XCTestCase {
         let notURL = "b"
         let noHost = "a://:c"
         
-        XCTAssert(noScheme.routerComponents.isEmpty)
-        XCTAssert(notURL.routerComponents.isEmpty)
-        XCTAssert(noHost.routerComponents.isEmpty)
+        XCTAssert(noScheme.urlComponents.isEmpty)
+        XCTAssert(notURL.urlComponents.isEmpty)
+        XCTAssert(noHost.urlComponents.isEmpty)
     }
     
     func testOverridePattern1() {
@@ -143,12 +143,12 @@ final class TrieRouterTests: XCTestCase {
         var p = RouterParameters()
         
         let output1 = "1"
-        trie.register(components: pattern.routerComponents, output: output1)
-        XCTAssertEqual(trie.match(urlComponents: url.urlComponents, parameters: &p), [output1])
+        trie.register(components: pattern.urlComponents, output: output1)
+        XCTAssertEqual(trie.match(components: url.urlComponents, parameters: &p), [output1])
         
         let output2 = "2"
-        trie.register(components: pattern.routerComponents, output: output2)
-        XCTAssertEqual(trie.match(urlComponents: url.urlComponents, parameters: &p), [output2])
+        trie.register(components: pattern.urlComponents, output: output2)
+        XCTAssertEqual(trie.match(components: url.urlComponents, parameters: &p), [output2])
     }
     
     func testOverridePattern2() {
@@ -157,15 +157,15 @@ final class TrieRouterTests: XCTestCase {
         let pattern = "c://a/:b"
         let output1 = "1"
         var p1 = RouterParameters()
-        trie.register(components: pattern.routerComponents, output: output1)
-        XCTAssertEqual(trie.match(urlComponents: url.urlComponents, parameters: &p1), [output1])
+        trie.register(components: pattern.urlComponents, output: output1)
+        XCTAssertEqual(trie.match(components: url.urlComponents, parameters: &p1), [output1])
         XCTAssertEqual(p1["b"], ["1"])
         
         let pattern2 = "c://a/:c"
         let output2 = "2"
         var p2 = RouterParameters()
-        trie.register(components: pattern2.routerComponents, output: output2)
-        XCTAssertEqual(trie.match(urlComponents: url.urlComponents, parameters: &p2), [output2])
+        trie.register(components: pattern2.urlComponents, output: output2)
+        XCTAssertEqual(trie.match(components: url.urlComponents, parameters: &p2), [output2])
         XCTAssertEqual(p2["c"], ["1"])
     }
 

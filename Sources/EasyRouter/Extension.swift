@@ -7,8 +7,6 @@
 
 import Foundation
 
-public typealias RouterParameters = [String: [String]]
-
 fileprivate let urlSet: CharacterSet = {
     var set = CharacterSet()
     set.formUnion(.urlHostAllowed)
@@ -19,10 +17,10 @@ fileprivate let urlSet: CharacterSet = {
 }()
 
 extension String {
-    var routerComponents: [RouterComponent] {
+    var urlComponents: [String] {
         if let string = addingPercentEncoding(withAllowedCharacters: urlSet),
            let url = URL(string: string) {
-            return url.urlComponents.map { RouterComponent(stringLiteral: $0) }
+            return url.urlComponents
         }
         return []
     }

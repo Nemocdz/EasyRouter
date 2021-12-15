@@ -7,14 +7,16 @@
 
 import Foundation
 
-enum RouterComponent {
-    case constant(String)
-    case parameter(name: String)
-    case anything
-    case catchall
+extension TrieRouter {
+    enum Component {
+        case constant(String)
+        case parameter(name: String)
+        case anything
+        case catchall
+    }
 }
 
-extension RouterComponent: CustomStringConvertible {
+extension TrieRouter.Component: CustomStringConvertible {
     var description: String {
         switch self {
         case .anything:
@@ -29,7 +31,7 @@ extension RouterComponent: CustomStringConvertible {
     }
 }
 
-extension RouterComponent: ExpressibleByStringInterpolation {
+extension TrieRouter.Component: ExpressibleByStringInterpolation {
     init(stringLiteral value: String) {
         let value = value.lowercased()
         if value.hasPrefix(":") {

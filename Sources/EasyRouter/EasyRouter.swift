@@ -10,11 +10,16 @@ import Foundation
 public class EasyRouter {
     public typealias RouteCompletion = (Result<EasyRouterHandlerContext, Error>) -> Void
 
-    private let trie = TrieRouter<EasyRouterHandler>()
     private let lock = NSLock()
+    private var routerImp: AnyURLRouter<EasyRouterHandler>
 
-    public init() {}
+    public required init<T>(routerImp: T) where T: URLRouter, T.Output == EasyRouterHandler {
+        self.routerImp = AnyURLRouter(routerImp)
+    }
 
+    public convenience init() {
+        self.init(routerImp: TrieRouter<EasyRouterHandler>())
+    }
     
     /// 注册匹配模式字符串和对应的执行结果
     /// - Parameters:
@@ -23,10 +28,10 @@ public class EasyRouter {
     /// - Returns: 是否注册成功，如果非法字符串则失败
     @discardableResult
     public func register(urlPattern: String, handler: EasyRouterHandler) -> Bool {
-        let components = urlPattern.routerComponents
+        let components = urlPattern.urlComponents
         guard !components.isEmpty else { return false }
         lock.lock()
-        trie.register(components: components, output: handler)
+        routerImp.register(components: components, output: handler)
         lock.unlock()
         return true
     }
@@ -46,7 +51,7 @@ public class EasyRouter {
     public func routeResult(of url: URL) -> RouteResult {
         var parameters = RouterParameters()
         lock.lock()
-        let handlers = trie.match(urlComponents: url.urlComponents, parameters: &parameters)
+        let handlers = routerImp.match(components: url.urlComponents, parameters: &parameters)
         lock.unlock()
         url.queryItems.forEach {
             if let value = $0.value {
