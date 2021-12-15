@@ -10,7 +10,8 @@ import XCTest
 
 final class RouterParametersDecoderTests: XCTestCase {
     func testDecodeInt() throws {
-        let parameters: RouterParameters = ["int": ["1", "-2"]]
+        let p1: RouterParameters = ["int": ["1", "-2"]]
+        let p2: RouterParameters = ["int": ["1"]]
         let decoder = RouterParametersDecoder()
         
         func testInt() throws {
@@ -18,7 +19,8 @@ final class RouterParametersDecoderTests: XCTestCase {
                 let int: Int
             }
             
-            let object = try decoder.decode(Object.self, from: parameters)
+            XCTAssertThrowsError(try decoder.decode(Object.self, from: p1))
+            let object = try decoder.decode(Object.self, from: p2)
             XCTAssertEqual(object.int, 1)
         }
         
@@ -27,7 +29,7 @@ final class RouterParametersDecoderTests: XCTestCase {
                 let int: [Int]
             }
             
-            let object = try decoder.decode(Object.self, from: parameters)
+            let object = try decoder.decode(Object.self, from: p1)
             XCTAssertEqual(object.int, [1, -2])
         }
         
@@ -36,7 +38,8 @@ final class RouterParametersDecoderTests: XCTestCase {
                 let int: UInt
             }
             
-            let object = try decoder.decode(Object.self, from: parameters)
+            XCTAssertThrowsError(try decoder.decode(Object.self, from: p1))
+            let object = try decoder.decode(Object.self, from: p2)
             XCTAssertEqual(object.int, 1)
         }
         
@@ -45,18 +48,21 @@ final class RouterParametersDecoderTests: XCTestCase {
                 let int: [UInt]
             }
             
-            _ = try decoder.decode(Object.self, from: parameters)
+            XCTAssertThrowsError(try decoder.decode(Object.self, from: p1))
+            let object = try decoder.decode(Object.self, from: p2)
+            XCTAssertEqual(object.int, [1])
         }
         
         XCTAssertNoThrow(try testInt())
         XCTAssertNoThrow(try testIntArray())
         XCTAssertNoThrow(try testUInt())
-        XCTAssertThrowsError(try testUIntArray())
+        XCTAssertNoThrow(try testUIntArray())
     }
     
     
     func testDecodeString() throws {
-        let parameters: RouterParameters = ["string": ["a", "b"]]
+        let p1: RouterParameters = ["string": ["a", "b"]]
+        let p2: RouterParameters = ["string": ["a"]]
         let decoder = RouterParametersDecoder()
         
         func testString() throws {
@@ -64,7 +70,8 @@ final class RouterParametersDecoderTests: XCTestCase {
                 let string: String
             }
             
-            let object = try decoder.decode(Object.self, from: parameters)
+            XCTAssertThrowsError(try decoder.decode(Object.self, from: p1))
+            let object = try decoder.decode(Object.self, from: p2)
             XCTAssertEqual(object.string, "a")
         }
         
@@ -73,7 +80,7 @@ final class RouterParametersDecoderTests: XCTestCase {
                 let string: [String]
             }
             
-            let object = try decoder.decode(Object.self, from: parameters)
+            let object = try decoder.decode(Object.self, from: p1)
             XCTAssertEqual(object.string, ["a", "b"])
         }
         
@@ -82,7 +89,8 @@ final class RouterParametersDecoderTests: XCTestCase {
     }
 
     func testDecodeBool() throws {
-        let parameters: RouterParameters = ["bool": ["true", "false"]]
+        let p1: RouterParameters = ["bool": ["true", "false"]]
+        let p2: RouterParameters = ["bool": ["true"]]
         let decoder = RouterParametersDecoder()
         
         func testBool() throws {
@@ -90,7 +98,8 @@ final class RouterParametersDecoderTests: XCTestCase {
                 let bool: Bool
             }
             
-            let object = try decoder.decode(Object.self, from: parameters)
+            XCTAssertThrowsError(try decoder.decode(Object.self, from: p1))
+            let object = try decoder.decode(Object.self, from: p2)
             XCTAssertEqual(object.bool, true)
         }
         
@@ -99,7 +108,7 @@ final class RouterParametersDecoderTests: XCTestCase {
                 let bool: [Bool]
             }
             
-            let object = try decoder.decode(Object.self, from: parameters)
+            let object = try decoder.decode(Object.self, from: p1)
             XCTAssertEqual(object.bool, [true, false])
         }
         
@@ -108,7 +117,8 @@ final class RouterParametersDecoderTests: XCTestCase {
     }
     
     func testDecodeFloat() throws {
-        let parameters: RouterParameters = ["float": ["1.1", "-2.1"]]
+        let p1: RouterParameters = ["float": ["1.1", "-2.1"]]
+        let p2: RouterParameters = ["float": ["1.1"]]
         let decoder = RouterParametersDecoder()
         
         func testDouble() throws {
@@ -116,7 +126,8 @@ final class RouterParametersDecoderTests: XCTestCase {
                 let float: Double
             }
             
-            let object = try decoder.decode(Object.self, from: parameters)
+            XCTAssertThrowsError(try decoder.decode(Object.self, from: p1))
+            let object = try decoder.decode(Object.self, from: p2)
             XCTAssert(object.float.isEqual(to: 1.1))
         }
         
@@ -125,8 +136,11 @@ final class RouterParametersDecoderTests: XCTestCase {
                 let float: [Double]
             }
             
-            let object = try decoder.decode(Object.self, from: parameters)
-            XCTAssert(zip(object.float, [1.1, -2.1]).allSatisfy({ $0.isEqual(to: $1) }))
+            
+            let object = try decoder.decode(Object.self, from: p1)
+            let result: [Double] = [1.1, -2.1]
+            XCTAssertEqual(object.float.count, result.count)
+            XCTAssert(zip(object.float, result).allSatisfy({ $0.isEqual(to: $1) }))
         }
         
         func testFloat() throws {
@@ -134,7 +148,8 @@ final class RouterParametersDecoderTests: XCTestCase {
                 let float: Float
             }
             
-            let object = try decoder.decode(Object.self, from: parameters)
+            XCTAssertThrowsError(try decoder.decode(Object.self, from: p1))
+            let object = try decoder.decode(Object.self, from: p2)
             XCTAssert(object.float.isEqual(to: 1.1))
         }
         
@@ -143,8 +158,10 @@ final class RouterParametersDecoderTests: XCTestCase {
                 let float: [Float]
             }
             
-            let object = try decoder.decode(Object.self, from: parameters)
-            XCTAssert(zip(object.float, [1.1, -2.1]).allSatisfy({ $0.isEqual(to: $1) }))
+            let object = try decoder.decode(Object.self, from: p1)
+            let result: [Float] = [1.1, -2.1]
+            XCTAssertEqual(object.float.count, result.count)
+            XCTAssert(zip(object.float, result).allSatisfy({ $0.isEqual(to: $1) }))
         }
         
         XCTAssertNoThrow(try testFloat())

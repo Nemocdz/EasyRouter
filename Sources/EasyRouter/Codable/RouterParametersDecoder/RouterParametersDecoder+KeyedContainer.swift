@@ -35,10 +35,14 @@ extension RouterParametersDecoder {
         var allKeys: [Key] { container.keys.compactMap { Key(stringValue: $0) } }
     
         private func find(for key: CodingKey) throws -> RouterParameters.Value.Element {
-            if let first = findValues(for: key).first {
-                return first
-            } else {
+            let values = findValues(for: key)
+            if values.count == 0 {
                 let context = DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "No value associated with key \(key) (\"\(key.stringValue)\").")
+                throw DecodingError.keyNotFound(key, context)
+            } else if values.count == 1 {
+                return values[0]
+            } else {
+                let context = DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Duplicate values associated with key \(key) (\"\(key.stringValue)\").")
                 throw DecodingError.keyNotFound(key, context)
             }
         }
