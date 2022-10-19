@@ -11,7 +11,7 @@ import XCTest
 final class EasyRouterTests: XCTestCase {
     struct TestParma: Codable {
     }
-    struct NextHandler: EasyRouterModelHandler {
+    struct NextHandler: EasyRouterHandler {
         typealias Parameters = TestParma
         let exp: XCTestExpectation
 
@@ -21,7 +21,7 @@ final class EasyRouterTests: XCTestCase {
         }
     }
     
-    struct FinishHandler: EasyRouterModelHandler {
+    struct FinishHandler: EasyRouterHandler {
         typealias Parameters = TestParma
         let exp: XCTestExpectation
         func handle(context: EasyRouterHandlerContext, result: Result<Parameters, Error>, completion: @escaping EasyRouterHandlerCompletion) {
@@ -80,7 +80,7 @@ final class EasyRouterTests: XCTestCase {
         let completion = expectation(description: "completion")
         
         
-        struct Next1Handler: EasyRouterModelHandler {
+        struct Next1Handler: EasyRouterHandler {
             typealias Parameters = TestParma
             let exp: XCTestExpectation
             func handle(context: EasyRouterHandlerContext, result: Result<EasyRouterTests.TestParma, Error>, completion: @escaping EasyRouterHandlerCompletion) {
@@ -92,7 +92,7 @@ final class EasyRouterTests: XCTestCase {
             }
         }
         
-        struct Next2Handler: EasyRouterModelHandler {
+        struct Next2Handler: EasyRouterHandler {
             typealias Parameters = TestParma
             let exp: XCTestExpectation
             func handle(context: EasyRouterHandlerContext, result: Result<EasyRouterTests.TestParma, Error>, completion: @escaping EasyRouterHandlerCompletion) {
@@ -134,7 +134,7 @@ final class EasyRouterTests: XCTestCase {
         let next = expectation(description: "next")
         let completion = expectation(description: "completion")
         
-        struct ModelHandler: EasyRouterModelHandler {
+        struct Handler: EasyRouterHandler {
             struct Parameters: Decodable {
                 let name: String
                 let age: Int
@@ -150,7 +150,7 @@ final class EasyRouterTests: XCTestCase {
         }
         
         let router = EasyRouter()
-        router.register(urlPattern: "a://**", handler: ModelHandler(exp: next))
+        router.register(urlPattern: "a://**", handler: Handler(exp: next))
         router.route(to: "a://b?name=hello&age=2") { result in
             completion.fulfill()
             XCTAssertNotNil(try? result.get())
@@ -163,7 +163,7 @@ final class EasyRouterTests: XCTestCase {
         let next = expectation(description: "next")
         let completion = expectation(description: "completion")
         
-        struct NextHandler: EasyRouterModelHandler {
+        struct NextHandler: EasyRouterHandler {
             typealias Parameters = TestParma
             let exp: XCTestExpectation
             func handle(context: EasyRouterHandlerContext, result: Result<EasyRouterTests.TestParma, Error>, completion: @escaping EasyRouterHandlerCompletion) {
@@ -185,7 +185,7 @@ final class EasyRouterTests: XCTestCase {
     }
     
     func testQueryItems() {
-        struct NextHandler: EasyRouterModelHandler {
+        struct NextHandler: EasyRouterHandler {
             typealias Parameters = TestParma
             func handle(context: EasyRouterHandlerContext, result: Result<EasyRouterTests.TestParma, Error>, completion: @escaping EasyRouterHandlerCompletion) {
                 completion(.next)
@@ -201,7 +201,7 @@ final class EasyRouterTests: XCTestCase {
     }
     
     func testMuilQueryItems() {
-        struct NextHandler: EasyRouterModelHandler {
+        struct NextHandler: EasyRouterHandler {
             typealias Parameters = TestParma
             func handle(context: EasyRouterHandlerContext, result: Result<EasyRouterTests.TestParma, Error>, completion: @escaping EasyRouterHandlerCompletion) {
                 completion(.next)
