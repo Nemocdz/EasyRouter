@@ -9,17 +9,22 @@
 import XCTest
 
 final class EasyRouterTests: XCTestCase {
-    struct NextHandler: EasyRouterHandler {
+    struct TestParma: Codable {
+    }
+    struct NextHandler: EasyRouterModelHandler {
+        typealias Parameters = TestParma
         let exp: XCTestExpectation
-        func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
+
+        func handle(context: EasyRouterHandlerContext, result: Result<Parameters, Error>, completion: @escaping EasyRouterHandlerCompletion) {
             exp.fulfill()
             completion(.next)
         }
     }
     
-    struct FinishHandler: EasyRouterHandler {
+    struct FinishHandler: EasyRouterModelHandler {
+        typealias Parameters = TestParma
         let exp: XCTestExpectation
-        func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
+        func handle(context: EasyRouterHandlerContext, result: Result<Parameters, Error>, completion: @escaping EasyRouterHandlerCompletion) {
             exp.fulfill()
             completion(.finish)
         }
@@ -74,9 +79,11 @@ final class EasyRouterTests: XCTestCase {
         let next2 = expectation(description: "finish")
         let completion = expectation(description: "completion")
         
-        struct Next1Handler: EasyRouterHandler {
+        
+        struct Next1Handler: EasyRouterModelHandler {
+            typealias Parameters = TestParma
             let exp: XCTestExpectation
-            func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
+            func handle(context: EasyRouterHandlerContext, result: Result<EasyRouterTests.TestParma, Error>, completion: @escaping EasyRouterHandlerCompletion) {
                 XCTAssert(context.executedHandlers.isEmpty)
                 XCTAssert(context.userInfo.keys.contains(0))
                 context.userInfo[1] = true
@@ -85,9 +92,10 @@ final class EasyRouterTests: XCTestCase {
             }
         }
         
-        struct Next2Handler: EasyRouterHandler {
+        struct Next2Handler: EasyRouterModelHandler {
+            typealias Parameters = TestParma
             let exp: XCTestExpectation
-            func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
+            func handle(context: EasyRouterHandlerContext, result: Result<EasyRouterTests.TestParma, Error>, completion: @escaping EasyRouterHandlerCompletion) {
                 XCTAssertEqual(context.executedHandlers.count, 1)
                 XCTAssert(context.userInfo.keys.contains(0))
                 XCTAssert(context.userInfo.keys.contains(1))
@@ -155,10 +163,10 @@ final class EasyRouterTests: XCTestCase {
         let next = expectation(description: "next")
         let completion = expectation(description: "completion")
         
-        struct NextHandler: EasyRouterHandler {
+        struct NextHandler: EasyRouterModelHandler {
+            typealias Parameters = TestParma
             let exp: XCTestExpectation
-            
-            func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
+            func handle(context: EasyRouterHandlerContext, result: Result<EasyRouterTests.TestParma, Error>, completion: @escaping EasyRouterHandlerCompletion) {
                 exp.fulfill()
                 DispatchQueue.global().async {
                     completion(.next)
@@ -177,8 +185,9 @@ final class EasyRouterTests: XCTestCase {
     }
     
     func testQueryItems() {
-        struct NextHandler: EasyRouterHandler {
-            func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
+        struct NextHandler: EasyRouterModelHandler {
+            typealias Parameters = TestParma
+            func handle(context: EasyRouterHandlerContext, result: Result<EasyRouterTests.TestParma, Error>, completion: @escaping EasyRouterHandlerCompletion) {
                 completion(.next)
             }
         }
@@ -192,8 +201,9 @@ final class EasyRouterTests: XCTestCase {
     }
     
     func testMuilQueryItems() {
-        struct NextHandler: EasyRouterHandler {
-            func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
+        struct NextHandler: EasyRouterModelHandler {
+            typealias Parameters = TestParma
+            func handle(context: EasyRouterHandlerContext, result: Result<EasyRouterTests.TestParma, Error>, completion: @escaping EasyRouterHandlerCompletion) {
                 completion(.next)
             }
         }

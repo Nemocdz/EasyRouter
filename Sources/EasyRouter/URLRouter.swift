@@ -9,7 +9,7 @@ import Foundation
 
 public typealias RouterParameters = [String: [String]]
 
-public protocol URLRouter {
+public protocol URLRouter<Output> {
     associatedtype Output
     mutating func register(pathComponents: [RouterPathComponent], output: Output)
     func match(components: [String], parameters: inout RouterParameters) -> [Output]

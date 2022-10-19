@@ -10,15 +10,6 @@ import Foundation
 public typealias EasyRouterHandlerCompletion = (EasyRouterHandlerResult) -> Void
 
 public protocol EasyRouterHandler {
-    
-    /// 中间件执行函数
-    /// - Parameters:
-    ///   - context: 上下文
-    ///   - completion: 执行结束结果
-    func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion)
-}
-
-public protocol EasyRouterModelHandler: EasyRouterHandler {
     associatedtype Parameters: Decodable
     
     /// 参数解码器
@@ -32,7 +23,7 @@ public protocol EasyRouterModelHandler: EasyRouterHandler {
     func handle(context: EasyRouterHandlerContext, result: Result<Parameters, Error>, completion: @escaping EasyRouterHandlerCompletion)
 }
 
-public extension EasyRouterModelHandler {
+extension EasyRouterHandler {
     func handle(context: EasyRouterHandlerContext, completion: @escaping EasyRouterHandlerCompletion) {
         let result: Result<Parameters, Error>
         do {

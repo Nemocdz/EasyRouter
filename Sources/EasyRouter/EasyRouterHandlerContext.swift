@@ -16,7 +16,7 @@ public final class EasyRouterHandlerContext {
     public let parameters: RouterParameters
     
     /// 已经执行的中间件
-    public internal(set) var executedHandlers: [EasyRouterHandler] = []
+    public internal(set) var executedHandlers: [any EasyRouterHandler] = []
     
     /// 自定义的信息
     public var userInfo: [AnyHashable: Any] = [:]

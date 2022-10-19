@@ -11,14 +11,14 @@ public class EasyRouter {
     public typealias RouteCompletion = (Result<EasyRouterHandlerContext, Never>) -> Void
 
     private let lock = NSLock()
-    private let routerImp: AnyURLRouter<EasyRouterHandler>
+    private var router: any URLRouter<any EasyRouterHandler>
 
-    public required init<T>(routerImp: T) where T: URLRouter, T.Output == EasyRouterHandler {
-        self.routerImp = AnyURLRouter(routerImp)
+    public required init(router: some URLRouter<any EasyRouterHandler>) {
+        self.router = router
     }
 
     public convenience init() {
-        self.init(routerImp: TrieRouter<EasyRouterHandler>())
+        self.init(router: TrieRouter<any EasyRouterHandler>())
     }
     
     /// 注册匹配模式字符串和对应的执行结果
@@ -27,11 +27,11 @@ public class EasyRouter {
     ///   - handler: 中间件
     /// - Returns: 是否注册成功，如果非法字符串则失败
     @discardableResult
-    public func register(urlPattern: String, handler: EasyRouterHandler) -> Bool {
+    public func register(urlPattern: String, handler: some EasyRouterHandler) -> Bool {
         let components = urlPattern.urlComponents.map { RouterPathComponent(stringLiteral: $0) }
         guard !components.isEmpty else { return false }
         lock.lock()
-        routerImp.register(pathComponents: components, output: handler)
+        router.register(pathComponents: components, output: handler)
         lock.unlock()
         return true
     }
@@ -50,7 +50,7 @@ public class EasyRouter {
     public func routeResult(of url: URL) -> RouteResult {
         var parameters = RouterParameters()
         lock.lock()
-        let handlers = routerImp.match(components: url.urlComponents, parameters: &parameters)
+        let handlers = router.match(components: url.urlComponents, parameters: &parameters)
         lock.unlock()
         url.queryItems.forEach {
             if let value = $0.value {
@@ -68,7 +68,7 @@ public extension EasyRouter {
         public let context: EasyRouterHandlerContext
         
         /// 所有匹配到的中间件
-        public let handlers: [EasyRouterHandler]
+        public let handlers: [any EasyRouterHandler]
         
         /// 执行匹配结果
         /// - Parameters:
